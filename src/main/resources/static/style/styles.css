@@ -229,6 +229,7 @@ nav ul li.active a {
 }
 
 .content-left .so-den,
+.content-left .so-van-ban,
 .content-left .ky-hieu,
 .content-left .loai-van-ban,
 .content-left .ngay-ban-hanh,
@@ -236,7 +237,6 @@ nav ul li.active a {
 .content-left .trich-yeu {
     font-size: 14px;
     text-align: left; /* Nằm phía bên trái */
-    font-weight: bold;
 }
 
 form {
