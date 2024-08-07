@@ -15,10 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping(path = "/auth/v1")
 public class AuthenticationController {
 
-    private final AuthenticationService authenticationService;
-    private final DocumentService documentService;
-    private final AuthenticationManager authenticationManager;
-
     @GetMapping(path = "/login")
     public String showLoginForm(Model model) {
         model.addAttribute("loginForm", new LoginForm());
