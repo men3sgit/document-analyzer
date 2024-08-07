@@ -60,77 +60,12 @@ function showDetails(soDen, ngayBanHanh, coQuanBanHanh, loaiVanBan, soKyHieu, tr
     });
 }
 
-document.getElementById('fileInput').addEventListener('change', function(event) {
-    const fileList = document.getElementById('fileList');
-    fileList.innerHTML = ''; // Clear the list
-
-    Array.from(event.target.files).forEach((file, index) => {
-        const fileItem = document.createElement('div');
-        fileItem.className = 'file-item';
-
-        const fileName = document.createElement('span');
-        fileName.textContent = file.name;
-        fileItem.appendChild(fileName);
-
-        const removeButton = document.createElement('button');
-        removeButton.textContent = 'Xoá';
-        removeButton.addEventListener('click', () => {
-            const dataTransfer = new DataTransfer();
-            const files = Array.from(event.target.files);
-            files.splice(index, 1);
-
-            files.forEach(file => {
-                dataTransfer.items.add(file);
-            });
-
-            event.target.files = dataTransfer.files;
-            fileItem.remove();
-        });
-        fileItem.appendChild(removeButton);
-
-        fileList.appendChild(fileItem);
-    });
-});
 
 
-document.addEventListener('DOMContentLoaded', function() {
-    // Tính toán thời gian hiện tại theo giờ Việt Nam (UTC+7)
-    const now = new Date();
-    const offset = 7 * 60; // Giờ Việt Nam là UTC+7
-    const localTime = new Date(now.getTime() + offset * 60 * 1000);
 
-    // Định dạng ngày theo định dạng 'YYYY-MM-DD'
-    const formattedDate = localTime.toISOString().split('T')[0];
-    // Định dạng ngày giờ theo định dạng 'YYYY-MM-DDTHH:MM'
-    const formattedDateTime = localTime.toISOString().slice(0,16);
 
-    // Cập nhật giá trị cho các trường ngày
-    document.getElementById('arrivalDate').value = formattedDateTime;
-    document.getElementById('issueDate').value = formattedDate;
-});
 
-document.getElementById('saveAndSubmit').addEventListener('click', function(event) {
-    event.preventDefault(); // Ngăn hành động mặc định của liên kết
 
-    // Kiểm tra tính hợp lệ của biểu mẫu
-    const form = document.querySelector('form');
-    if (form.checkValidity()) {
-        // Hiển thị hộp thoại xác nhận
-        const isConfirmed = confirm('Bạn chắc chắn lưu văn bản?');
-
-        if (isConfirmed) {
-            // Gửi biểu mẫu nếu người dùng chọn đồng ý
-            form.submit(); // Hoặc xử lý gửi dữ liệu bằng AJAX/Fetch API ở đây
-            alert('Form đã được gửi thành công!');
-        } else {
-            // Nếu người dùng chọn hủy, không làm gì cả
-            alert('Đã hủy thao tác lưu.');
-        }
-    } else {
-        // Nếu biểu mẫu không hợp lệ, hiển thị thông báo lỗi
-        alert('Vui lòng điền đầy đủ thông tin.');
-    }
-});
 
 // Thêm sự kiện click cho nút "Lưu và Trình Chánh VP"
 document.getElementById('saveAndTrinhChanhVP').addEventListener('click', function(event) {

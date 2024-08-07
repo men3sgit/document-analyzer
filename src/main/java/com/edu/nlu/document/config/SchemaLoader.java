@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -39,8 +40,8 @@ public class SchemaLoader {
                 .soKiHieuVanBan("Công văn")
                 .coQuanBanHanh("Hội Sân khấu TPHCM")
                 .loaiVanBan("Về việc báo cáo đổi mới cơ chế quản lý, tổ chức lại hệ thống đơn vị sự nghiệp công lập và kết quả thực hiện Nghị quyết số 19-NQ/TW")
-                .ngayDen(new Date(2022 , 4 - 1, 27))
-                .ngayBanHanh(new Date(2023, 4 - 1, 27))
+                .ngayDen(LocalDateTime.now())
+                .ngayBanHanh(LocalDateTime.now())
                 .trichYeu(String.valueOf(random.nextInt()))
                 .build();
 
@@ -50,8 +51,8 @@ public class SchemaLoader {
                 .soKiHieuVanBan("Thư mời")
                 .coQuanBanHanh("Tạp chí cộng sản")
                 .loaiVanBan("Viết tham luận Hội thảo khoa học")
-                .ngayDen(new Date(2022, 12, 20))
-                .ngayBanHanh(new Date(2022 - 1900, 3, 20))
+                .ngayDen(LocalDateTime.now())
+                .ngayBanHanh(LocalDateTime.now())
                 .trichYeu(String.valueOf(random.nextInt()))
                 .build();
 
@@ -61,8 +62,8 @@ public class SchemaLoader {
                 .soKiHieuVanBan("Thông báo")
                 .coQuanBanHanh("Công ty Cổ phần Giáo dục MCG Việt Nam")
                 .loaiVanBan("V/v tuyển sinh các lớp đào tạo bồi dưỡng kiến thức QLNN")
-                .ngayDen(new Date(2024, 6, 4))
-                .ngayBanHanh(new Date(2024, 11, 4))
+                .ngayDen(LocalDateTime.now())
+                .ngayBanHanh(LocalDateTime.now())
                 .trichYeu(String.valueOf(random.nextInt()))
                 .build();
 
@@ -72,8 +73,8 @@ public class SchemaLoader {
                 .soKiHieuVanBan("Công văn")
                 .coQuanBanHanh("Công ty Cổ phần Giáo dục MCG Việt Nam")
                 .loaiVanBan("V/v phối hợp khảo sát, tuyển sinh các chương trình bồi dưỡng, đào tạo cho CBCC, VC và NLĐ của cơ quan, đơn vị")
-                .ngayDen(new Date(2022, 3, 12))
-                .ngayBanHanh(new Date(2022, 3, 12))
+                .ngayDen(LocalDateTime.now())
+                .ngayBanHanh(LocalDateTime.now())
                 .trichYeu(String.valueOf(random.nextInt()))
                 .build();
 
@@ -83,8 +84,8 @@ public class SchemaLoader {
                 .soKiHieuVanBan("Công văn")
                 .coQuanBanHanh("Học viện Cán bộ - TPHCM")
                 .loaiVanBan("Về kinh phí lớp Trung cấp lý luận chính trị năm 2022 của Sở Nội vụ")
-                .ngayDen(new Date(2023, 2, 4))
-                .ngayBanHanh(new Date(2024, 1, 4))
+                .ngayDen(LocalDateTime.now())
+                .ngayBanHanh(LocalDateTime.now())
                 .trichYeu(String.valueOf(random.nextInt()))
                 .build();
 
@@ -94,8 +95,8 @@ public class SchemaLoader {
                 .soKiHieuVanBan("Báo cáo")
                 .coQuanBanHanh("Phòng Nội vụ - Quận Tân Bình - TPHCM")
                 .loaiVanBan("Báo cáo danh sách cán bộ công chức phòng Nội vụ Quý I năm 2022")
-                .ngayDen(new Date(2021, 4, 4))
-                .ngayBanHanh(new Date(2014, 7, 4))
+                .ngayDen(LocalDateTime.now())
+                .ngayBanHanh(LocalDateTime.now())
                 .trichYeu(String.valueOf(random.nextInt()))
                 .build();
 

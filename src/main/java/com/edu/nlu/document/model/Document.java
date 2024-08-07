@@ -8,6 +8,7 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Column;
 import jakarta.persistence.Lob;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import lombok.AllArgsConstructor;
@@ -55,10 +56,10 @@ public class Document {
     private boolean vanBanQPPL;
 
     @Column(name = "ngay_den", nullable = false)
-    private Date ngayDen;
+    private LocalDateTime ngayDen;
 
     @Column(name = "ngay_ban_hanh", nullable = false)
-    private Date ngayBanHanh;
+    private LocalDateTime ngayBanHanh;
 
     @Column(name = "cap_co_quan")
     private String capCoQuan;
@@ -70,7 +71,7 @@ public class Document {
     private Integer thoiGianXuLy;
 
     @Column(name = "thoi_gian_tao")
-    private Date thoiGianTao = new Date();
+    private LocalDateTime thoiGianTao = LocalDateTime.now();
 
 
 

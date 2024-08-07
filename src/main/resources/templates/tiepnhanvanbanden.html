@@ -11,7 +11,7 @@
 <body>
 <header>
     <div class="logo">
-        <img th:src="@{/images/logo.png}" alt="Logo" />
+        <img th:src="@{/images/logo.png}" alt="Logo"/>
     </div>
     <div class="search-bar">
         <input type="text" placeholder="Nhập từ khóa tìm kiếm">
@@ -103,99 +103,101 @@
 </div>
 
 <div class="content">
-    <form style="padding-top: 12px;">
+    <form id="addDocumentForm" style="padding-top: 12px;" method="post" th:action="@{/xulyvanban}" enctype="multipart/form-data" th:object="${documentForm}" >
         <div class="form-group">
             <div class="left">
                 <label>Số văn bản <span class="required">(*)</span></label>
-                <input type="text" placeholder="Nhập tên hoặc mã" required>
+                <input type="text" name="documentNumber" placeholder="Nhập tên hoặc mã" required>
             </div>
             <div class="right">
                 <label>Văn bản QPPL</label>
-                <input type="checkbox">
+                <input type="checkbox" name="isLegalDocument">
             </div>
         </div>
         <div class="form-group">
             <div class="left">
                 <label>Số đến <span class="required">(*)</span></label>
-                <input type="text" required>
+                <input type="text" name="arrivalNumber" required>
             </div>
             <div class="right">
                 <label>Ngày đến</label>
-                <input type="datetime-local" id="arrivalDate" required>
+                <input type="datetime-local" name="arrivalDate" required id="arrivalDate">
             </div>
         </div>
         <div class="form-group">
             <div class="left">
                 <label>Số ký hiệu của văn bản <span class="required">(*)</span></label>
-                <input type="text" required>
+                <input type="text" name="documentSymbol" required>
             </div>
             <div class="right">
                 <label>Ngày ban hành</label>
-                <input type="date" id="issueDate" required>
+                <input type="date" name="issueDate" required id="issueDate">
             </div>
         </div>
         <div class="form-group">
             <div class="left">
                 <label>Cơ quan ban hành <span class="required">(*)</span></label>
-                <input type="text" required>
+                <input type="text" name="issuingAgency" required>
             </div>
             <div class="right">
                 <label>Cấp cơ quan</label>
-                <input type="text">
+                <input type="text" name="agencyLevel">
             </div>
         </div>
         <div class="form-group">
             <div class="left">
                 <label>Loại văn bản</label>
-                <input type="text">
+                <input type="text" name="documentType">
             </div>
             <div class="right">
                 <label>Lĩnh vực</label>
-                <input type="text">
+                <input type="text" name="field">
             </div>
         </div>
         <div class="form-group">
             <div class="left">
                 <label>Trích yếu <span class="required">(*)</span></label>
-                <textarea required></textarea>
+                <textarea name="summary" required></textarea>
             </div>
         </div>
         <div class="form-group">
             <div class="left">
                 <label>Ghi chú</label>
-                <textarea></textarea>
+                <textarea name="note"></textarea>
             </div>
         </div>
         <div class="form-group">
             <div class="left">
                 <label>Văn bản chỉ đạo</label>
-                <input type="checkbox">
+                <input type="checkbox" name="isDirectiveDocument">
             </div>
             <div class="right">
                 <label>Thời gian xử lý</label>
-                <input type="date">
+                <input type="date" name="processingTime">
             </div>
         </div>
         <div class="form-group">
             <div class="left">
                 <label>Có bản giấy</label>
-                <input type="checkbox">
+                <input type="checkbox" name="hasPaperCopy">
             </div>
         </div>
         <div class="form-group">
             <div class="left">
                 <label>Đính kèm tệp tin</label>
-                <input type="file" multiple id="fileInput">
+                <input type="file" name="attachedFiles" multiple id="fileInput">
             </div>
         </div>
         <div class="file-list" id="fileList"></div>
     </form>
 </div>
+
 <footer class="footer">
     <div class="left">
         <h3>Sở Nội vụ Thành phố Hồ Chí Minh</h3>
         <p>Địa chỉ: 86B Lê Thánh Tôn, Phường Bến Nghé, Quận 1, TP.HCM</p>
-        <p>Điện thoại: (028) 38 295 110 - Fax: (028) 38 231 489 - Emai: <a href="mailto:snv@sonoivu.hochiminhcity.gov.vn">snv@sonoivu.hochiminhcity.gov.vn</a></p>
+        <p>Điện thoại: (028) 38 295 110 - Fax: (028) 38 231 489 - Emai: <a
+                href="mailto:snv@sonoivu.hochiminhcity.gov.vn">snv@sonoivu.hochiminhcity.gov.vn</a></p>
         <p>NSS eGov v5.3. Thiết kế và phát triển bởi NewSaigonSoft</p>
     </div>
 </footer>
@@ -267,5 +269,76 @@
         </form>
     </div>
 </div>
+<script>
+    document.getElementById('saveAndSubmit').addEventListener('click', function(event) {
+        event.preventDefault(); // Ngăn hành động mặc định của liên kết
 
+        // Kiểm tra tính hợp lệ của biểu mẫu
+        const form = document.getElementById('addDocumentForm');
+        if (form.checkValidity()) {
+            // Hiển thị hộp thoại xác nhận
+            const isConfirmed = confirm('Bạn chắc chắn lưu văn bản?');
+
+            if (isConfirmed) {
+                // Gửi biểu mẫu nếu người dùng chọn đồng ý
+                form.submit(); // Hoặc xử lý gửi dữ liệu bằng AJAX/Fetch API ở đây
+                alert('Form đã được gửi thành công!');
+            } else {
+                // Nếu người dùng chọn hủy, không làm gì cả
+                alert('Đã hủy thao tác lưu.');
+            }
+        } else {
+            // Nếu biểu mẫu không hợp lệ, hiển thị thông báo lỗi
+            alert('Vui lòng điền đầy đủ thông tin.');
+        }
+    });
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Tính toán thời gian hiện tại theo giờ Việt Nam (UTC+7)
+        const now = new Date();
+        const offset = 7 * 60; // Giờ Việt Nam là UTC+7
+        const localTime = new Date(now.getTime() + offset * 60 * 1000);
+
+        // Định dạng ngày theo định dạng 'YYYY-MM-DD'
+        const formattedDate = localTime.toISOString().split('T')[0];
+        // Định dạng ngày giờ theo định dạng 'YYYY-MM-DDTHH:MM'
+        const formattedDateTime = localTime.toISOString().slice(0,16);
+
+        // Cập nhật giá trị cho các trường ngày
+        document.getElementById('arrivalDate').value = formattedDateTime;
+        document.getElementById('issueDate').value = formattedDate;
+    });
+    document.getElementById('fileInput').addEventListener('change', function(event) {
+        const fileList = document.getElementById('fileList');
+        fileList.innerHTML = ''; // Clear the list
+
+        Array.from(event.target.files).forEach((file, index) => {
+            const fileItem = document.createElement('div');
+            fileItem.className = 'file-item';
+
+            const fileName = document.createElement('span');
+            fileName.textContent = file.name;
+            fileItem.appendChild(fileName);
+
+            const removeButton = document.createElement('button');
+            removeButton.textContent = 'Xoá';
+            removeButton.addEventListener('click', () => {
+                const dataTransfer = new DataTransfer();
+                const files = Array.from(event.target.files);
+                files.splice(index, 1);
+
+                files.forEach(file => {
+                    dataTransfer.items.add(file);
+                });
+
+                event.target.files = dataTransfer.files;
+                fileItem.remove();
+            });
+            fileItem.appendChild(removeButton);
+
+            fileList.appendChild(fileItem);
+        });
+    });
+</script>
 <script src="/js/script.js"></script>
