@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xử lý văn bản - Sở Nội vụ - TPHCM</title>
+    <link href="/images/logo_quochuy.png" rel="Shortcut Icon">
+    <link href="/style/styles.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+<header>
+    <div class="logo">
+        <img th:src="@{/images/logo.png}" />
+    </div>
+    <div class="search-bar">
+        <input type="text" placeholder="Nhập từ khóa tìm kiếm">
+        <button type="button"><i class="fa-solid fa-magnifying-glass"></i></button>
+    </div>
+    <div class="user-info" onclick="toggleDropdown()">
+        <img th:src="@{/images/avatar.png}" alt="Avatar">
+        <div>
+            <span class="role">Văn Thư</span>
+            <br>
+            <span class="name">Văn thư</span>
+        </div>
+        <div class="dropdown-menu">
+            <form th:action="@{/auth/v1/logout}" method="post" id="logoutForm">
+                <button type="submit">Thoát</button>
+            </form>
+        </div>
+    </div>
+</header>
+<nav>
+    <ul>
+        <li>
+            <a href="#" th:href="@{/home}">
+                <i class="fas fa-home"></i>
+            </a>
+        </li>
+        <li class="active">
+            <a href="#" th:href="@{/xulyvanban}">Xử lý văn bản</a>
+        </li>
+        <li>
+            <a href="#" th:href="@{/vanbanden}">Văn bản đến</a>
+        </li>
+        <li>
+            <a href="#" th:href="@{/vanbandi}">Văn bản đi</a>
+        </li>
+        <li>
+            <a href="#" th:href="@{/vanbannoibo}">Văn bản nội bộ</a>
+        </li>
+        <li>
+            <a href="#" th:href="@{/vanbanlienhong}">Văn bản liên thông</a>
+        </li>
+        <li>
+            <a href="#" th:href="@{/tracuu}">Tra cứu</a>
+        </li>
+    </ul>
+</nav>
+<div class="sub-menu">
+    <ul class="child-menu">
+        <li>
+            <a th:href="@{/xulyvanban}">▸Tiếp nhận văn bản đến (Alt+1)</a>
+        </li>
+        <li>
+            <a th:href="@{/hopthuvandan}">▸Hộp thư văn bản đến (Alt+2)</a>
+        </li>
+        <li>
+            <a th:href="@{/duthao}">▸Dự thảo văn bản (Alt+3)</a>
+        </li>
+        <li>
+            <a th:href="@{/phathanh}">▸Phát hành văn bản (Alt+4)</a>
+        </li>
+        <li>
+            <a th:href="@{/cho_phathanh}">▸Văn bản chờ phát hành (Alt+5)</a>
+        </li>
+        <li>
+            <a th:href="@{/soanvannoibo}">▸Soạn văn bản nội bộ (Alt+6)</a>
+        </li>
+    </ul>
+</div>
+<div class="content">
+    <div class="content-left">
+        <h3>Công việc của tôi</h3>
+        <ul>
+            <li th:each="vanban : ${vanbans}">
+                <div class="van-ban">
+                    <p class="thoi-gian-tao" th:text="${vanban.thoiGianTao}">05/08/2024 15:58</p>
+                    <p class="so-den" th:utext="'<strong>Số đến:</strong> ' + ${vanban.soDen}">Số đến: 6902/SNV</p>
+                    <p class="ky-hieu" th:utext="'<strong>Số, ký hiệu của VB:</strong> ' + ${vanban.soKiHieuVanBan}">Số, ký hiệu của VB: 112233</p>
+                    <p class="loai-van-ban" th:utext="'<strong>Loại văn bản:</strong> ' + ${vanban.loaiVanBan}">Loại văn bản: Chương trình</p>
+                    <p class="ngay-ban-hanh" th:utext="'<strong>Ngày ban hành:</strong> ' + ${vanban.ngayBanHanh}">Ngày ban hành: 26/03/2024</p>
+                    <p class="co-quan-ban-hanh" th:utext="'<strong>Cơ quan ban hành:</strong> ' + ${vanban.coQuanBanHanh}">Cơ quan ban hành: Ban Bồi thường giải phóng mặt bằng Quận 10 - TPHCM</p>
+                    <p class="trich-yeu" th:utext="'<strong>Trích yếu:</strong> ' + ${vanban.trichYeu}">112233</p>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="content-right">
+        <!-- Right content here -->
+    </div>
+</div>
+<footer class="footer">
+    <div class="left">
+        <h3>Sở Nội vụ Thành phố Hồ Chí Minh</h3>
+        <p>Địa chỉ: 86B Lê Thánh Tôn, Phường Bến Nghé, Quận 1, TP.HCM</p>
+        <p>Điện thoại: (028) 38 295 110 - Fax: (028) 38 231 489 - Email: snv@sonoivu.hochiminhcity.gov.vn</p>
+        <p>NSS eGov v5.3. Thiết kế và phát triển bởi NewSaigonSoft</p>
+    </div>
+</footer>
+<script src="script.js" th:src="@{/js/script.js}"></script>
+</body>
+</html>

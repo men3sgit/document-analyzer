@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tiếp nhận văn bản - Sở Nội vụ - TPHCM</title>
+    <link href="images/logo_quochuy.png" rel="Shortcut Icon">
+    <link href="/style/styles.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+<header>
+    <div class="logo">
+        <img th:src="@{/images/logo.png}" alt="Logo" />
+    </div>
+    <div class="search-bar">
+        <input type="text" placeholder="Nhập từ khóa tìm kiếm">
+        <button type="button"><i class="fa-solid fa-magnifying-glass"></i></button>
+    </div>
+    <div class="user-info" onclick="toggleDropdown()">
+        <img th:src="@{/images/avatar.png}" alt="Avatar">
+        <div>
+            <span class="role">Văn Thư</span>
+            <br>
+            <span class="name" th:text="${session.user.name}">Văn thư</span>
+        </div>
+        <div class="dropdown-menu">
+            <a th:href="@{/auth/v1/logout}">Thoát</a>
+        </div>
+    </div>
+</header>
+<nav>
+    <ul>
+        <li>
+            <a th:href="@{/}">
+                <i class="fas fa-home"></i>
+            </a>
+        </li>
+        <li class="active">
+            <a th:href="@{/xulyvanban}">Xử lý văn bản</a>
+        </li>
+        <li>
+            <a th:href="@{/vanbanden}">Văn bản đến</a>
+        </li>
+        <li>
+            <a th:href="@{/vanbandi}">Văn bản đi</a>
+        </li>
+        <li>
+            <a th:href="@{/vanbannoibo}">Văn bản nội bộ</a>
+        </li>
+        <li>
+            <a th:href="@{/vanbanlienthong}">Văn bản liên thông</a>
+        </li>
+        <li>
+            <a th:href="@{/tracuu}">Tra cứu</a>
+        </li>
+    </ul>
+</nav>
+<div class="sub-menu">
+    <ul class="child-menu">
+        <li class="active">
+            <a>▸Tiếp nhận văn bản đến (Alt+1)</a>
+        </li>
+        <li>
+            <a>▸Hộp thư văn bản đến (Alt+2)</a>
+        </li>
+        <li>
+            <a>▸Dự thảo văn bản (Alt+3)</a>
+        </li>
+        <li>
+            <a>▸Phát hành văn bản (Alt+4)</a>
+        </li>
+        <li>
+            <a>▸Văn bản chờ phát hành (Alt+5)</a>
+        </li>
+        <li>
+            <a>▸Soạn văn bản nội bộ (Alt+6)</a>
+        </li>
+    </ul>
+</div>
+<div style="background-color: #007bff; padding:8px;">
+    <h2 style="color: white; padding-left: 8px; margin: 0;">Tiếp nhận văn bản đến</h2>
+</div>
+
+<div class="sub-option">
+    <ul class="child-option">
+        <li>
+            <a id="saveAndSubmit"><i class="fa-solid fa-file"></i> Lưu và nhập văn bản</a>
+        </li>
+        <li>
+            <a id="saveAndTrinhChanhVP"><i class="fa-solid fa-file-export"></i> Lưu và Trình Chánh VP</a>
+        </li>
+        <li>
+            <a><i class="fa-solid fa-file"></i> Thêm mới(Giống VB trước)</a>
+        </li>
+        <li>
+            <a><i class="fa-solid fa-link"></i> Liên kết</a>
+        </li>
+        <li>
+            <a><i class="fa-solid fa-square-pen"></i> Nhập lại</a>
+        </li>
+    </ul>
+</div>
+
+<div class="content">
+    <form style="padding-top: 12px;">
+        <div class="form-group">
+            <div class="left">
+                <label>Số văn bản <span class="required">(*)</span></label>
+                <input type="text" placeholder="Nhập tên hoặc mã" required>
+            </div>
+            <div class="right">
+                <label>Văn bản QPPL</label>
+                <input type="checkbox">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="left">
+                <label>Số đến <span class="required">(*)</span></label>
+                <input type="text" required>
+            </div>
+            <div class="right">
+                <label>Ngày đến</label>
+                <input type="datetime-local" id="arrivalDate" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="left">
+                <label>Số ký hiệu của văn bản <span class="required">(*)</span></label>
+                <input type="text" required>
+            </div>
+            <div class="right">
+                <label>Ngày ban hành</label>
+                <input type="date" id="issueDate" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="left">
+                <label>Cơ quan ban hành <span class="required">(*)</span></label>
+                <input type="text" required>
+            </div>
+            <div class="right">
+                <label>Cấp cơ quan</label>
+                <input type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="left">
+                <label>Loại văn bản</label>
+                <input type="text">
+            </div>
+            <div class="right">
+                <label>Lĩnh vực</label>
+                <input type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="left">
+                <label>Trích yếu <span class="required">(*)</span></label>
+                <textarea required></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="left">
+                <label>Ghi chú</label>
+                <textarea></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="left">
+                <label>Văn bản chỉ đạo</label>
+                <input type="checkbox">
+            </div>
+            <div class="right">
+                <label>Thời gian xử lý</label>
+                <input type="date">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="left">
+                <label>Có bản giấy</label>
+                <input type="checkbox">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="left">
+                <label>Đính kèm tệp tin</label>
+                <input type="file" multiple id="fileInput">
+            </div>
+        </div>
+        <div class="file-list" id="fileList"></div>
+    </form>
+</div>
+<footer class="footer">
+    <div class="left">
+        <h3>Sở Nội vụ Thành phố Hồ Chí Minh</h3>
+        <p>Địa chỉ: 86B Lê Thánh Tôn, Phường Bến Nghé, Quận 1, TP.HCM</p>
+        <p>Điện thoại: (028) 38 295 110 - Fax: (028) 38 231 489 - Emai: <a href="mailto:snv@sonoivu.hochiminhcity.gov.vn">snv@sonoivu.hochiminhcity.gov.vn</a></p>
+        <p>NSS eGov v5.3. Thiết kế và phát triển bởi NewSaigonSoft</p>
+    </div>
+</footer>
+
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <p class="modal-title">Trình Chánh VP</p>
+            <span class="close"><i class="fa-solid fa-xmark"></i></span>
+        </div>
+        <div class="sub-option">
+            <ul class="child-option">
+                <li>
+                    <a id="sendButton"><i class="fa-solid fa-file-export"></i> Chuyển</a>
+                </li>
+            </ul>
+        </div>
+        <form>
+            <div class="form-group">
+                <div class="left">
+                    <label style="padding: 8px;">Nội dung xử lý</label>
+                    <textarea required></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="left">
+                    <label style="padding: 8px;">Người nhận <span class="required">(*)</span></label>
+                    <table class="document-table">
+                        <thead>
+                        <tr>
+                            <th>
+                                <input type="checkbox" id="selectAllCheckbox">
+                            </th>
+                            <th>
+                                <p>Họ và tên</p>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>
+                                <input type="checkbox" class="rowCheckbox" data-value="Chánh văn phòng">
+                            </td>
+                            <td>
+                                <p>Chánh văn phòng <span>(Chánh văn phòng)</span></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input type="checkbox" class="rowCheckbox" data-value="Chuyên viên">
+                            </td>
+                            <td>
+                                <p>Lê Mộng Trang <span>(Chuyên viên)</span></p>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="left">
+                    <label style="padding: 8px;">Người xử lý chính <span class="required">(*)</span></label>
+                    <select id="selectOptions" required>
+                        <option value="">Chọn một tùy chọn</option>
+                        <!-- Thymeleaf options can be populated here -->
+                    </select>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="/js/script.js"></script>
