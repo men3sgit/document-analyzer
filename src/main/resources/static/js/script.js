@@ -16,49 +16,7 @@ window.onclick = function(event) {
 }
 
 
-function showDetails(soDen, ngayBanHanh, coQuanBanHanh, loaiVanBan, soKyHieu, trichYeu, nguoiXuLy, vanBanChiDao, ngayHetHanXLVB, ngayHetHanXuLyCoPhong, tepDinhKem) {
-    const mainContent = document.getElementById('main-content');
-    mainContent.innerHTML = `
-        <div>
-            <div class="sub-option">
-                <ul class="child-option">
-                    <li>
-                        <a id="saveAndTrinhChanhVP"><i class="fa-solid fa-file-export"></i></i>Trình Chánh VP</a>
-                    </li>
-                    <li>
-                        <a><i class="fa-solid fa-pen-to-square"></i> Chỉnh sửa</a>
-                    </li>
-                    <li>
-                        <a><i class="fa-solid fa-trash"></i> Xoá</a>
-                    </li>
-                </ul>
-            <div>
-            <div style="padding: 10px;">
-                <h2>Chi tiết văn bản</h2>
-                <p><strong>Số đến:</strong> ${soDen}</p>
-                <p><strong>Ngày ban hành:</strong> ${ngayBanHanh}</p>
-                <p><strong>Cơ quan ban hành:</strong> ${coQuanBanHanh}</p>
-                <p><strong>Loại văn bản:</strong> ${loaiVanBan}</p>
-                <p><strong>Số, ký hiệu:</strong> ${soKyHieu}</p>
-                <p><strong>Trích yếu:</strong> ${trichYeu}</p>
-                <p><strong>Người xử lý:</strong> ${nguoiXuLy}</p>
-                <p><strong>Văn bản chỉ đạo:</strong> ${vanBanChiDao}</p>
-                <p><strong>Ngày hết hạn XLVB:</strong> ${ngayHetHanXLVB}</p>
-                <p><strong>Ngày hết hạn xử lý của phòng:</strong> ${ngayHetHanXuLyCoPhong}</p>
-                <p><strong>Tệp đính kèm:</strong></p>
-                <ul>
-                    ${tepDinhKem.map(tep => `<li><a href="#">${tep}</a></li>`).join('')}
-                </ul>
-            </div>
-        </div>
-    `;
 
-    // Gán sự kiện sau khi nội dung được cập nhật
-    document.getElementById('saveAndTrinhChanhVP').addEventListener('click', function(event) {
-        event.preventDefault();
-        document.getElementById('modal').style.display = 'block';
-    });
-}
 
 
 
