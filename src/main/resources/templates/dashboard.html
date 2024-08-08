@@ -82,6 +82,7 @@
 </div>
 <div class="content">
     <div class="content-left">
+
         <h2 style="margin: 0; padding: 8px">Công việc của tôi</h2>
         <select id="tinhtrang" style="font-size: 16px; font-weight: bold; padding: 8px; width: 100%;">
             <option value="1">Văn bản chưa xử lý</option>
@@ -106,8 +107,10 @@
         </ul>
     </div>
     <div class="content-right" id="main-content">
+
         <!-- Right content here -->
     </div>
+
 </div>
 <footer class="footer">
     <div class="left">
@@ -117,6 +120,7 @@
         <p>NSS eGov v5.3. Thiết kế và phát triển bởi NewSaigonSoft</p>
     </div>
 </footer>
+
 <div id="modal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
@@ -210,6 +214,7 @@
             <div class="sub-option">
                 <ul class="child-option">
                     <li>
+
                         <a id="trinhChanhVP"><i class="fa-solid fa-file-export"></i> Trình Chánh VP</a>
                     </li>
                     <li>
@@ -219,6 +224,7 @@
                         <a><i class="fa-solid fa-trash"></i> Xoá</a>
                     </li>
                 </ul>
+
             </div>
             <div style="padding: 10px;">
                 <h2>Chi tiết văn bản</h2>
@@ -235,11 +241,14 @@
     `;
 
         // Gán sự kiện sau khi nội dung được cập nhật
+
         document.getElementById('trinhChanhVP').addEventListener('click', function (event) {
             event.preventDefault();
             document.getElementById('modal').style.display = 'block';
         });
     }
+
+
     // Thêm sự kiện click cho nút đóng modal
     document.querySelector('.modal .close').addEventListener('click', function() {
         document.getElementById('modal').style.display = 'none';
