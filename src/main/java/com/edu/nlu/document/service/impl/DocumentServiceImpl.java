@@ -1,12 +1,15 @@
 package com.edu.nlu.document.service.impl;
 
+import com.edu.nlu.document.enums.Status;
 import com.edu.nlu.document.mapper.DocumentMapper;
 import com.edu.nlu.document.model.Document;
 import com.edu.nlu.document.model.File;
+import com.edu.nlu.document.model.Statement;
 import com.edu.nlu.document.payload.DocumentForm;
 import com.edu.nlu.document.repository.DocumentRepository;
-import com.edu.nlu.document.repository.FileRepository;
 import com.edu.nlu.document.service.DocumentService;
+import com.edu.nlu.document.service.FileService;
+import com.edu.nlu.document.service.StatementService;
 import com.edu.nlu.document.util.FileUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,16 +23,19 @@ import java.util.Objects;
 public class DocumentServiceImpl implements DocumentService {
     private final DocumentRepository documentRepository;
     private final DocumentMapper documentMapper;
-    private final FileRepository fileRepository;
+    private final FileService fileService;
+    private final StatementService statementService;
+    private final CommonService commonService;
+
 
     @Override
-    public List<Document> getAllDocumentsByUsername(String username) {
-//        select doc.* from document doc, statement sta, user u where u.id = statement.userID and statement.idDoc = doc.id
-        return documentRepository.findAll();
+    public List<Document> getAllDocumentsByCurrentUser() {
+        Long userId = commonService.getCurrentUserId();
+        return documentRepository.findAllDocumentsByUserId(userId);
     }
 
     @Override
-    public void addNewDocument(DocumentForm documentForm) {
+    public Document addNewDocument(DocumentForm documentForm) {
         var storedDocument = documentRepository.save(documentMapper.sourceToDestination(documentForm));
         List<MultipartFile> files = documentForm.getAttachedFiles();
 
@@ -40,8 +46,16 @@ public class DocumentServiceImpl implements DocumentService {
                 .documentId(storedDocument.getId())
                 .extension(FileUtil.getExtension(Objects.requireNonNull(multipartFile.getOriginalFilename())))
                 .build()).toList();
-        fileRepository.saveAll(list);
+        fileService.saveAll(list);
 
+
+        Statement newStatement = new Statement();
+        newStatement.setDocumentId(storedDocument.getId());
+        newStatement.setUserId(commonService.getCurrentUserId());
+        newStatement.setStatus(Status.CREATED);
+        statementService.createStatement(newStatement);
+
+        return storedDocument;
     }
 
     @Override

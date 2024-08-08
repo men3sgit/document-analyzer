@@ -137,9 +137,9 @@ public class SchemaLoader {
         User user3 = new User();
         user3.setUsername("user3");
         user3.setRole(Role.CHANH_VAN_PHONG);
-        user3.setPosition("Chanh Van Phong");
+        user3.setPosition("Chánh văn phòng");
         user3.setPassword(passwordEncoder.encode("password"));
-        user3.setName("User Three");
+        user3.setName("Cường đep trai");
 //        user3.setRoles(new HashSet<>(Set.of(userRole)));
 
         User user4 = new User();
@@ -147,13 +147,13 @@ public class SchemaLoader {
         user4.setRole(Role.CHANH_VAN_PHONG);
         user4.setPosition("Chanh Van Phong");
         user4.setPassword(passwordEncoder.encode("password"));
-        user4.setName("User Four");
+        user4.setName("Lê Mong Trang");
 //        user4.setRoles(new HashSet<>(Set.of(userRole)));
 
         User user5 = new User();
         user5.setUsername("user5");
         user5.setRole(Role.CHANH_VAN_PHONG);
-        user5.setPosition("Chanh Van Phong");
+        user5.setPosition("Luaatj Su");
         user5.setPassword(passwordEncoder.encode("password"));
         user5.setName("User Five");
 //        user5.setRoles(new HashSet<>(Set.of(adminRole)));

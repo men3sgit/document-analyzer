@@ -17,4 +17,9 @@ public class FileServiceImpl implements FileService {
     public List<File> getAllFileByDocumentId(Long documentId) {
         return fileRepository.findAllByDocumentId(documentId);
     }
+
+    @Override
+    public void saveAll(List<File> files) {
+        fileRepository.saveAll(files);
+    }
 }

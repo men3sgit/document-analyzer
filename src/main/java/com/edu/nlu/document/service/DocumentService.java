@@ -7,9 +7,9 @@ import java.util.List;
 
 public interface DocumentService {
 
-    List<Document> getAllDocumentsByUsername(String username);
+    List<Document> getAllDocumentsByCurrentUser();
 
-    void addNewDocument(DocumentForm documentForm);
+    Document addNewDocument(DocumentForm documentForm);
 
     Document getDocumentById(Long id);
 }
