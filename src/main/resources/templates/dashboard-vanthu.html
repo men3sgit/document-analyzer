@@ -91,17 +91,16 @@
         <ul style="padding-top: 12px;">
             <li th:each="vanban : ${vanbans}"
                 class="van-ban-item"
-                th:attr="id=${vanban.id},data-so-van-ban=${vanban.soVanBan}, data-so-den=${vanban.soDen}, data-so-ky-hieu=${vanban.soKiHieuVanBan}, data-co-quan-ban-hanh=${vanban.coQuanBanHanh}, data-loai-van-ban=${vanban.loaiVanBan}, data-ngay-den=${vanban.ngayDen}, data-ngay-ban-hanh=${vanban.ngayBanHanh}, data-trich-yeu=${vanban.trichYeu}"
-            >
+                th:attr="id=${vanban.document.id},data-status=${vanban.statement.status},data-so-van-ban=${vanban.document.soVanBan}, data-so-den=${vanban.document.soDen}, data-so-ky-hieu=${vanban.document.soKiHieuVanBan}, data-co-quan-ban-hanh=${vanban.document.coQuanBanHanh}, data-loai-van-ban=${vanban.document.loaiVanBan}, data-ngay-den=${vanban.document.ngayDen}, data-ngay-ban-hanh=${vanban.document.ngayBanHanh}, data-trich-yeu=${vanban.document.trichYeu}">
                 <div class="van-ban">
-                    <p class="thoi-gian-tao" th:text="${vanban.ngayDen}"></p>
-                    <p class="so-van-ban" th:utext="'<strong>Số văn bản:</strong> ' + ${vanban.soVanBan}"></p>
-                    <p class="so-den" th:utext="'<strong>Số đến:</strong> ' + ${vanban.soDen}"></p>
-                    <p class="ky-hieu" th:utext="'<strong>Số, ký hiệu của VB:</strong> ' + ${vanban.soKiHieuVanBan}"></p>
-                    <p class="loai-van-ban" th:utext="'<strong>Loại văn bản:</strong> ' + ${vanban.loaiVanBan}"></p>
-                    <p class="ngay-ban-hanh" th:utext="'<strong>Ngày ban hành:</strong> ' + ${vanban.ngayBanHanh}"></p>
-                    <p class="co-quan-ban-hanh" th:utext="'<strong>Cơ quan ban hành:</strong> ' + ${vanban.coQuanBanHanh}"></p>
-                    <p class="trich-yeu" th:utext="'<strong>Trích yếu:</strong> ' + ${vanban.trichYeu}"></p>
+                    <p class="thoi-gian-tao" th:text="${vanban.document.ngayDen}"></p>
+                    <p class="so-van-ban" th:utext="'<strong>Số văn bản:</strong> ' + ${vanban.document.soVanBan}"></p>
+                    <p class="so-den" th:utext="'<strong>Số đến:</strong> ' + ${vanban.document.soDen}"></p>
+                    <p class="ky-hieu" th:utext="'<strong>Số, ký hiệu của VB:</strong> ' + ${vanban.document.soKiHieuVanBan}"></p>
+                    <p class="loai-van-ban" th:utext="'<strong>Loại văn bản:</strong> ' + ${vanban.document.loaiVanBan}"></p>
+                    <p class="ngay-ban-hanh" th:utext="'<strong>Ngày ban hành:</strong> ' + ${vanban.document.ngayBanHanh}"></p>
+                    <p class="co-quan-ban-hanh" th:utext="'<strong>Cơ quan ban hành:</strong> ' + ${vanban.document.coQuanBanHanh}"></p>
+                    <p class="trich-yeu" th:utext="'<strong>Trích yếu:</strong> ' + ${vanban.document.trichYeu}"></p>
                 </div>
             </li>
         </ul>
@@ -199,7 +198,7 @@
                     success: function(data) {
                         console.log(data)
                         showDetailsXuLy(
-                            data.documentId,
+                            data.documentForm.documentNumber,
                             data.documentForm.arrivalNumber,
                             data.documentForm.documentSymbol,
                             data.documentForm.issuingAgency,
@@ -207,7 +206,8 @@
                             data.documentForm.arrivalDate,
                             data.documentForm.issueDate,
                             data.documentForm.summary,
-                            data.files
+                            data.files,
+                            data.statement
                         );
                     },
                     error: function(error) {
@@ -218,40 +218,43 @@
         });
     });
 
-    function showDetailsXuLy(soVanBan, soDen, soKyHieu, coQuanBanHanh, loaiVanBan, ngayDen, ngayBanHanh, trichYeu, files) {
+    function showDetailsXuLy(soVanBan, soDen, soKyHieu, coQuanBanHanh, loaiVanBan, ngayDen, ngayBanHanh, trichYeu, files, statement) {
         const mainContent = document.getElementById('main-content');
+
+        // Kiểm tra status của statement
+        const actionsHTML = statement.status === 'FORWARDED' ? '' : `
+        <div class="sub-option">
+            <ul class="child-option">
+                <li>
+                    <a id="trinhChanhVP"><i class="fa-solid fa-file-export"></i> Trình Chánh VP</a>
+                </li>
+                <li>
+                    <a><i class="fa-solid fa-pen-to-square"></i> Chỉnh sửa</a>
+                </li>
+                <li>
+                    <a><i class="fa-solid fa-trash"></i> Xoá</a>
+                </li>
+            </ul>
+        </div>
+    `;
+
+        // Cập nhật nội dung của main-content
         mainContent.innerHTML = `
-        <div>
-            <div class="sub-option">
-                <ul class="child-option">
-                    <li>
-
-                        <a id="trinhChanhVP"><i class="fa-solid fa-file-export"></i> Trình Chánh VP</a>
-                    </li>
-                    <li>
-                        <a><i class="fa-solid fa-pen-to-square"></i> Chỉnh sửa</a>
-                    </li>
-                    <li>
-                        <a><i class="fa-solid fa-trash"></i> Xoá</a>
-                    </li>
-                </ul>
-
-            </div>
-            <div style="padding: 10px;">
-                <h2>Chi tiết văn bản</h2>
-                <p><strong>Số văn bản:</strong> ${soVanBan}</p>
-                <p><strong>Số đến:</strong> ${soDen}</p>
-                <p><strong>Số, ký hiệu:</strong> ${soKyHieu}</p>
-                <p><strong>Cơ quan ban hành:</strong> ${coQuanBanHanh}</p>
-                <p><strong>Loại văn bản:</strong> ${loaiVanBan}</p>
-                <p><strong>Ngày đến:</strong> ${ngayDen}</p>
-                <p><strong>Ngày ban hành:</strong> ${ngayBanHanh}</p>
-                <p><strong>Trích yếu:</strong> ${trichYeu}</p>
-                <p><strong>Tep dinh kem:</strong></p>
-                <ul>
-                    ${files.map(file => `<li><a href="#">${file.name} (${formatCapacity(file.size)})</a></li>`).join('')}
-                </ul>
-            </div>
+        ${actionsHTML}
+        <div style="padding: 10px;">
+            <h2>Chi tiết văn bản</h2>
+            <p><strong>Số văn bản:</strong> ${soVanBan}</p>
+            <p><strong>Số đến:</strong> ${soDen}</p>
+            <p><strong>Số, ký hiệu:</strong> ${soKyHieu}</p>
+            <p><strong>Cơ quan ban hành:</strong> ${coQuanBanHanh}</p>
+            <p><strong>Loại văn bản:</strong> ${loaiVanBan}</p>
+            <p><strong>Ngày đến:</strong> ${ngayDen}</p>
+            <p><strong>Ngày ban hành:</strong> ${ngayBanHanh}</p>
+            <p><strong>Trích yếu:</strong> ${trichYeu}</p>
+            <p><strong>Tệp Đính kèm:</strong></p>
+            <ul>
+                ${files.map(file => `<li><a href="#">${file.name} (${formatCapacity(file.size)})</a></li>`).join('')}
+            </ul>
         </div>
     `;
 
@@ -378,6 +381,31 @@
         const i = Math.floor(Math.log(bytes) / Math.log(1024));
         return parseFloat((bytes / Math.pow(1024, i)).toFixed(2)) + ' ' + sizes[i];
     }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const selectElement = document.getElementById('tinhtrang');
+        const vanBanItems = document.querySelectorAll('.van-ban-item');
+
+        selectElement.addEventListener('change', function() {
+            const selectedValue = this.value;
+
+            vanBanItems.forEach(function(item) {
+                const status = item.getAttribute('data-status');
+
+                if ((selectedValue === '1' && status === 'CREATED') ||
+                    (selectedValue === '2' && status === 'FORWARDED')) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+
+        // Gọi sự kiện change khi trang được load để áp dụng ngay từ đầu
+        selectElement.dispatchEvent(new Event('change'));
+    });
+
+
 </script>
 </body>
 </html>

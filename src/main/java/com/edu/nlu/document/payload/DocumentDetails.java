@@ -1,6 +1,7 @@
 package com.edu.nlu.document.payload;
 
 import com.edu.nlu.document.model.File;
+import com.edu.nlu.document.model.Statement;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -13,4 +14,5 @@ public class DocumentDetails {
     private Long documentId;
     private DocumentForm documentForm;
     private List<File> files;
+    private Statement statement;
 }

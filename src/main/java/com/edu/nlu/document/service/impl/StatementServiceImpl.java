@@ -2,6 +2,7 @@ package com.edu.nlu.document.service.impl;
 
 import com.edu.nlu.document.model.Statement;
 import com.edu.nlu.document.repository.StatementRepository;
+import com.edu.nlu.document.service.CommonService;
 import com.edu.nlu.document.service.StatementService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

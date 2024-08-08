@@ -1,10 +1,13 @@
 package com.edu.nlu.document.controller;
 
 import com.edu.nlu.document.enums.Role;
+import com.edu.nlu.document.model.Document;
+import com.edu.nlu.document.model.Statement;
+import com.edu.nlu.document.model.StatementDocumentWrapper;
 import com.edu.nlu.document.service.DocumentService;
 import com.edu.nlu.document.service.StatementService;
 import com.edu.nlu.document.service.UserService;
-import com.edu.nlu.document.service.impl.CommonService;
+import com.edu.nlu.document.service.CommonService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +16,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -26,8 +31,15 @@ public class DashboardController {
 
     @GetMapping(path = {"/dashboard", "", "/"})
     public String showHomePage(HttpServletRequest request, Principal principal, Model model) {
-        model.addAttribute("vanbans", documentService.getAllDocumentsByCurrentUser());
-        model.addAttribute("statements", statementService.getStatementsByCurrentUser());
+        List<Document> documents = documentService.getAllDocumentsByCurrentUser();
+        List<Statement> statements = statementService.getStatementsByCurrentUser();
+
+        List<StatementDocumentWrapper> wrappedList = new ArrayList<>();
+        for (int i = 0; i < documents.size(); i++) {
+            wrappedList.add(new StatementDocumentWrapper(documents.get(i), statements.get(i)));
+        }
+        model.addAttribute("vanbans", wrappedList);
+
         model.addAttribute("users", userService.findAll());
         String role = commonService.getCurrentUserRole().name();
         return getDashboardByRole(role);

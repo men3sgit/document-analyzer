@@ -13,7 +13,7 @@ import com.edu.nlu.document.service.DocumentService;
 import com.edu.nlu.document.service.FileService;
 import com.edu.nlu.document.service.StatementService;
 import com.edu.nlu.document.service.UserService;
-import com.edu.nlu.document.service.impl.CommonService;
+import com.edu.nlu.document.service.CommonService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -50,10 +50,14 @@ public class DocumentController {
         Document document = documentService.getDocumentById(id);
         DocumentForm documentForm = documentMapper.destinationToSource(document);
         List<File> files = fileService.getAllFileByDocumentId(id);
+        Statement statement = statementService.getStatement(commonService.getCurrentUserId(), document.getId());
+
         DocumentDetails documentDetails = new DocumentDetails();
         documentDetails.setDocumentId(document.getId());
         documentDetails.setDocumentForm(documentForm);
         documentDetails.setFiles(files);
+        documentDetails.setStatement(statement);
+
         return documentDetails;
     }
 
@@ -87,6 +91,32 @@ public class DocumentController {
         });
 
         Statement storedStatement = statementService.getStatement(commonService.getCurrentUserId(), documentForward.getDocumentId());
+        storedStatement.setStatus(Status.FORWARDED);
+        statementService.updateStatement(storedStatement);
+        return "redirect:/dashboard";
+    }
+
+    @PostMapping(path = "/luuvachuyenvanban")
+    public String showLuuVaChuyenVanBan(@Valid @ModelAttribute DocumentForward documentForward,
+                                        @ModelAttribute DocumentForm documentForm,
+                                        Model model) {
+        var document = documentService.addNewDocument(documentForm);
+
+        documentForward.getReceivedUsers().forEach(userId -> {
+            Statement newStatement = new Statement();
+            newStatement.setDocumentId(document.getId());
+            newStatement.setNote(documentForward.getContent());
+            newStatement.setUserId(userId);
+            if (Objects.equals(userId, documentForward.getMainReceivedUser())) {
+                newStatement.setStatus(Status.SENT);
+            } else {
+                newStatement.setStatus(Status.RECEIVED);
+            }
+            statementService.createStatement(newStatement);
+
+        });
+
+        Statement storedStatement = statementService.getStatement(commonService.getCurrentUserId(), document.getId());
         storedStatement.setStatus(Status.FORWARDED);
         statementService.updateStatement(storedStatement);
         return "redirect:/dashboard";
