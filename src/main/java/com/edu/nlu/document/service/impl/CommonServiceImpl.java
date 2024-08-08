@@ -2,6 +2,7 @@ package com.edu.nlu.document.service.impl;
 
 import com.edu.nlu.document.enums.Role;
 import com.edu.nlu.document.model.User;
+import com.edu.nlu.document.service.CommonService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;

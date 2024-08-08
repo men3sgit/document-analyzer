@@ -217,11 +217,11 @@
                 </li>
             </ul>
         </div>
-        <form id="nextDocumentForm">
+        <form id="nextDocumentForm" method="post" th:action="@{/documents/luuvachuyenvanban}" enctype="multipart/form-data" th:object="${documentForward}">
             <div class="form-group">
                 <div class="left">
                     <label style="padding: 8px;">Nội dung xử lý</label>
-                    <textarea placeholder="Nhập thông tin xử lý"></textarea>
+                    <textarea placeholder="Nhập thông tin xử lý" name="content"></textarea>
                 </div>
             </div>
             <div class="form-group">
@@ -241,7 +241,7 @@
                         <tbody>
                         <tr th:each ="user: ${users}">
                             <td>
-                                <input type="checkbox" class="rowCheckbox" th:attr="user_name=${user.name}, user_position=${user.position}, user_id=${user.id}">
+                                <input type="checkbox" class="rowCheckbox" name="receivedUsers" th:value="${user.id}" th:attr="user_name=${user.name}, user_position=${user.position}, user_id=${user.id}">
                             </td>
                             <td>
                                 <p th:utext="'<strong>'+${user.name}+'</strong>'+'  ('+${user.position}+')'"></p>
@@ -254,7 +254,7 @@
             <div class="form-group">
                 <div class="left">
                     <label style="padding: 8px;">Người xử lý chính <span class="required">(*)</span></label>
-                    <select id="selectOptions" required>
+                    <select id="selectOptions" required name="mainReceivedUser">
                         <option value="">Chọn một tùy chọn</option>
                         <!-- Thymeleaf options can be populated here -->
                     </select>
@@ -454,10 +454,39 @@
                 const isConfirmed = confirm('Bạn chắc chắn chuyển chánh văn phòng?');
 
                 if (isConfirmed) {
-                    const form = document.getElementById('nextDocumentForm');
-                    // Gửi biểu mẫu nếu người dùng chọn đồng ý
-                    form.submit();
-                    alert('Đã chuyển thành công!');
+                    const addDocumentForm = new FormData(document.getElementById('addDocumentForm'));
+                    const nextDocumentForm = new FormData(document.getElementById('nextDocumentForm'));
+
+                    // Tạo FormData mới để kết hợp dữ liệu từ cả hai form
+                    const combinedFormData = new FormData();
+
+                    // Thêm dữ liệu từ addDocumentForm vào combinedFormData
+                    addDocumentForm.forEach((value, key) => {
+                        combinedFormData.append(key, value);
+                    });
+
+                    // Thêm dữ liệu từ nextDocumentForm vào combinedFormData
+                    nextDocumentForm.forEach((value, key) => {
+                        combinedFormData.append(key, value);
+                    });
+
+                    // Gửi dữ liệu kết hợp đến server
+                    fetch('/documents/luuvachuyenvanban', {
+                        method: 'POST',
+                        body: combinedFormData
+                    }).then(response => {
+                        if (response.redirected) {
+                            // Xử lý redirect nếu cần
+                            alert('Đã lưu và chuyển văn bản xử lý.');
+                            window.location.href = response.url;
+                        } else {
+                            return response.json(); // Xử lý phản hồi JSON nếu cần
+                        }
+                    })
+                        .catch(error => {
+                        // Xử lý lỗi nếu cần, mặc dù bạn không cần phải xử lý phản hồi
+                        console.error('Error:', error);
+                    });
                 } else {
                     // Nếu người dùng chọn hủy, không làm gì cả
                     alert('Đã hủy thao tác lưu.');

@@ -56,6 +56,7 @@ public class DocumentMapperImpl implements DocumentMapper {
                 .isLegalDocument(destination.isVanBanQPPL())
                 .isDirectiveDocument(destination.isVanBanChiDao())
                 .hasPaperCopy(destination.isCoBangGiay())
+                .arrivalDate(destination.getNgayDen())
                 .build();
     }
 }
