@@ -73,7 +73,7 @@ public class DocumentController {
         return "tiepnhanvanbanden";
     }
 
-    @PostMapping(path = "/chuyenvanban")
+    @PostMapping(path = "/chuyenchuyenvien")
     public String showChuyenVanBan(@Valid @ModelAttribute DocumentForward documentForward, Model model) {
         log.info(documentForward.toString());
         documentForward.getReceivedUsers().forEach(userId -> {
@@ -96,7 +96,30 @@ public class DocumentController {
         return "redirect:/dashboard";
     }
 
-    @PostMapping(path = "/luuvachuyenvanban")
+    @PostMapping(path = "/chuyenbangiamdoc")
+    public String showChuyenBanGiamDoc(@Valid @ModelAttribute DocumentForward documentForward, Model model) {
+        log.info(documentForward.toString());
+        documentForward.getReceivedUsers().forEach(userId -> {
+            Statement newStatement = new Statement();
+            newStatement.setDocumentId(documentForward.getDocumentId());
+            newStatement.setNote(documentForward.getContent());
+            newStatement.setUserId(userId);
+            if (Objects.equals(userId, documentForward.getMainReceivedUser())) {
+                newStatement.setStatus(Status.SENT);
+            } else {
+                newStatement.setStatus(Status.RECEIVED);
+            }
+            statementService.createStatement(newStatement);
+
+        });
+
+        Statement storedStatement = statementService.getStatement(commonService.getCurrentUserId(), documentForward.getDocumentId());
+        storedStatement.setStatus(Status.FORWARDED);
+        statementService.updateStatement(storedStatement);
+        return "redirect:/dashboard";
+    }
+
+    @PostMapping(path = "/luuvachuyenchuyenvien")
     public String showLuuVaChuyenVanBan(@Valid @ModelAttribute DocumentForward documentForward,
                                         @ModelAttribute DocumentForm documentForm,
                                         Model model) {

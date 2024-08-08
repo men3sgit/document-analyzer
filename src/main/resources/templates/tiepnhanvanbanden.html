@@ -217,7 +217,7 @@
                 </li>
             </ul>
         </div>
-        <form id="nextDocumentForm" method="post" th:action="@{/documents/luuvachuyenvanban}" enctype="multipart/form-data" th:object="${documentForward}">
+        <form id="nextDocumentForm" method="post" th:action="@{/documents/luuvachuyenvanthu}" enctype="multipart/form-data" th:object="${documentForward}">
             <div class="form-group">
                 <div class="left">
                     <label style="padding: 8px;">Nội dung xử lý</label>
@@ -471,7 +471,7 @@
                     });
 
                     // Gửi dữ liệu kết hợp đến server
-                    fetch('/documents/luuvachuyenvanban', {
+                    fetch('/documents/luuvachuyenvanthu', {
                         method: 'POST',
                         body: combinedFormData
                     }).then(response => {
