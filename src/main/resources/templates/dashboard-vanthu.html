@@ -134,11 +134,12 @@
                 </li>
             </ul>
         </div>
-        <form id="nextDocumentForm">
+        <form id="nextDocumentForm" method="post" th:action="@{/documents/chuyenvanban}" enctype="multipart/form-data" th:object="${documentForward}">
+            <input type="hidden" id="documentId" name="documentId">
             <div class="form-group">
                 <div class="left">
                     <label style="padding: 8px;">Nội dung xử lý</label>
-                    <textarea placeholder="Nhập thông tin xử lý"></textarea>
+                    <textarea placeholder="Nhập thông tin xử lý" name="content"></textarea>
                 </div>
             </div>
             <div class="form-group">
@@ -156,22 +157,14 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td>
-                                <input type="checkbox" class="rowCheckbox" data-value="Chánh văn phòng">
-                            </td>
-                            <td>
-                                <p>Chánh văn phòng <span>(Chánh văn phòng)</span></p>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <input type="checkbox" class="rowCheckbox" data-value="Chuyên viên">
-                            </td>
-                            <td>
-                                <p>Lê Mộng Trang <span>(Chuyên viên)</span></p>
-                            </td>
-                        </tr>
+                            <tr th:each ="user: ${users}">
+                                <td>
+                                        <input type="checkbox" class="rowCheckbox" name="receivedUsers" th:value="${user.id}" th:attr="user_name=${user.name}, user_position=${user.position}, user_id=${user.id}">
+                                </td>
+                                <td>
+                                    <p th:utext="'<strong>'+${user.name}+'</strong>'+'  ('+${user.position}+')'"></p>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -179,7 +172,7 @@
             <div class="form-group">
                 <div class="left">
                     <label style="padding: 8px;">Người xử lý chính <span class="required">(*)</span></label>
-                    <select id="selectOptions" required>
+                    <select id="selectOptions" required name="mainReceivedUser">
                         <option value="">Chọn một tùy chọn</option>
                         <!-- Thymeleaf options can be populated here -->
                     </select>
@@ -196,6 +189,9 @@
         vanBanItems.forEach(item => {
             item.addEventListener('click', function() {
                 const documentId = this.getAttribute('id');
+
+                // Set the hidden input field with the document ID
+                document.getElementById('documentId').value = documentId;
 
                 $.ajax({
                     url: `/documents/${documentId}`,
@@ -316,14 +312,15 @@
             }
         }
 
-        // Cập nhật tùy chọn của thẻ select từ danh sách checkbox
         function updateSelectOptions() {
-            var selectedValues = new Set(); // Dùng Set để loại bỏ giá trị trùng lặp
+            var selectedUsers = new Set(); // Dùng Set để loại bỏ giá trị trùng lặp
             rowCheckboxes.forEach(function(checkbox) {
                 if (checkbox.checked) {
-                    var value = checkbox.dataset.value; // Lấy giá trị từ thuộc tính data-value của checkbox
-                    if (value) {
-                        selectedValues.add(value);
+                    var userId = checkbox.getAttribute('user_id');
+                    var userName = checkbox.getAttribute('user_name');
+                    var userPosition = checkbox.getAttribute('user_position');
+                    if (userId) {
+                        selectedUsers.add({ id: userId, name: userName, position: userPosition });
                     }
                 }
             });
@@ -332,10 +329,10 @@
             selectElement.innerHTML = '<option value="">Chọn một tùy chọn</option>';
 
             // Thêm các tùy chọn mới vào thẻ select
-            selectedValues.forEach(function(value) {
+            selectedUsers.forEach(function(user) {
                 var option = document.createElement('option');
-                option.value = value;
-                option.textContent = value;
+                option.value = user.id;
+                option.textContent = `${user.name} (${user.position})`;
                 selectElement.appendChild(option);
             });
         }

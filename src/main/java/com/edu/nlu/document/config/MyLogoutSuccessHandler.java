@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.stereotype.Component;
 
@@ -25,7 +26,7 @@ public class MyLogoutSuccessHandler implements LogoutSuccessHandler {
             request.getSession().removeAttribute("specificAttribute");
             request.getSession().invalidate();
         }
-
+        SecurityContextHolder.clearContext();
         // Redirect to the login page with a logout parameter
         response.sendRedirect(request.getContextPath() + "/auth/v1/login?logout");
     }

@@ -1,13 +1,12 @@
 package com.edu.nlu.document.model;
 
 import com.edu.nlu.document.enums.Status;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import lombok.Data;
 
 @Table(name = "statements")
 @Entity
+@Data
 public class Statement {
     @Id
     @GeneratedValue
@@ -19,5 +18,6 @@ public class Statement {
 
     private Long userId;
 
+    @Enumerated(EnumType.STRING)
     private Status status;
 }

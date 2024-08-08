@@ -1,21 +1,16 @@
 package com.edu.nlu.document.controller;
 
 import com.edu.nlu.document.enums.Role;
-import com.edu.nlu.document.model.User;
-import com.edu.nlu.document.payload.DocumentForm;
 import com.edu.nlu.document.service.DocumentService;
+import com.edu.nlu.document.service.StatementService;
 import com.edu.nlu.document.service.UserService;
-import jakarta.validation.Valid;
+import com.edu.nlu.document.service.impl.CommonService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
 
@@ -23,36 +18,28 @@ import java.security.Principal;
 @RequiredArgsConstructor
 @Controller
 public class DashboardController {
-    private final UserDetailsService userDetailsService;
     private final DocumentService documentService;
+    private final UserService userService;
+    private final StatementService statementService;
+    private final CommonService commonService;
 
 
     @GetMapping(path = {"/dashboard", "", "/"})
-    public String showHomePage(Principal principal, Model model) {
-        UserDetails userDetails = userDetailsService.loadUserByUsername(principal.getName());
-        model.addAttribute("vanbans", documentService.getAllDocumentsByUsername(User.NO_NAME));
-
-        String role = userDetails.getAuthorities().stream().findFirst().get().getAuthority();
+    public String showHomePage(HttpServletRequest request, Principal principal, Model model) {
+        model.addAttribute("vanbans", documentService.getAllDocumentsByCurrentUser());
+        model.addAttribute("statements", statementService.getStatementsByCurrentUser());
+        model.addAttribute("users", userService.findAll());
+        String role = commonService.getCurrentUserRole().name();
         return getDashboardByRole(role);
     }
 
 
     @GetMapping(path = "/xulyvanban")
     public String showXuLyVanBan(Model model) {
-
+        model.addAttribute("users", userService.findAll());
         return "tiepnhanvanbanden";
     }
 
-    @PostMapping(path = "/xulyvanban")
-    public String showXuLyVanBan(@Valid @ModelAttribute DocumentForm documentForm, Model model) {
-        log.info(documentForm.toString());
-        documentForm.getAttachedFiles()
-                .stream()
-                .map(MultipartFile::getOriginalFilename)
-                .forEach(log::info);
-        documentService.addNewDocument(documentForm);
-        return "tiepnhanvanbanden";
-    }
 
     private String getDashboardByRole(String role) {
         return switch (Role.valueOf(role)) {

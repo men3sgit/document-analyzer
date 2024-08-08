@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface FileService {
     List<File> getAllFileByDocumentId(Long documentId);
+
+    void saveAll(List<File> files);
 }
