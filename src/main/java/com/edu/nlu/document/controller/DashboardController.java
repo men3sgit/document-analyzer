@@ -39,7 +39,7 @@ public class DashboardController {
             wrappedList.add(new StatementDocumentWrapper(documents.get(i), statements.get(i)));
         }
         model.addAttribute("vanbans", wrappedList);
-
+        model.addAttribute("user", userService.findById(commonService.getCurrentUserId()));
         model.addAttribute("users", userService.findAll());
         String role = commonService.getCurrentUserRole().name();
         return getDashboardByRole(role);

@@ -20,9 +20,9 @@
     <div class="user-info" onclick="toggleDropdown()">
         <img th:src="@{/images/avatar.png}" alt="Avatar">
         <div>
-            <span class="role">Văn Thư</span>
+            <span class="role" th:text="${user.position}"></span>
             <br>
-            <span class="name">Văn thư</span>
+            <span class="name" th:text="${user.name}">Văn thư</span>
         </div>
         <div class="dropdown-menu">
             <form th:action="@{/auth/v1/logout}" method="post" id="logoutForm">
@@ -133,7 +133,7 @@
                 </li>
             </ul>
         </div>
-        <form id="nextDocumentForm" method="post" th:action="@{/documents/chuyenvanban}" enctype="multipart/form-data" th:object="${documentForward}">
+        <form id="nextDocumentForm" method="post" th:action="@{/documents/chuyenchuyenvien}" enctype="multipart/form-data" th:object="${documentForward}">
             <input type="hidden" id="documentId" name="documentId">
             <div class="form-group">
                 <div class="left">

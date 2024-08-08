@@ -178,12 +178,12 @@ nav ul li.active a {
 .content {
     display: flex;
     padding: 5px; /* Padding cho cả div content */
-    min-height: 550px;
+    min-height: 800px;
 }
 
 .content-left {
     width: 30%;
-    max-height: 650px;
+    max-height: 800px;
     border: 2px solid rgb(81, 81, 241); /* Border xanh cho div content-left */
     padding: 10px; /* Padding cho div content-left */
     margin-right: 2px;
