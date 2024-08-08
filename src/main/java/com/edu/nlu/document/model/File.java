@@ -2,9 +2,10 @@ package com.edu.nlu.document.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
+@Builder
 @Data
 @Entity
 @Table(name = "files")
@@ -23,4 +24,6 @@ public class File {
     private long size;
 
     private String extension;
+
+    private Long documentId;
 }

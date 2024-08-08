@@ -1,13 +1,8 @@
 package com.edu.nlu.document.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.Column;
-import jakarta.persistence.Lob;
+import jakarta.persistence.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -15,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Table(name = "documents")
 @Entity
@@ -27,6 +23,9 @@ public class Document {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "so_van_ban", nullable = false)
+    private String soVanBan;
 
     @Column(name = "so_den", nullable = false)
     private String soDen;
@@ -59,7 +58,7 @@ public class Document {
     private LocalDateTime ngayDen;
 
     @Column(name = "ngay_ban_hanh", nullable = false)
-    private LocalDateTime ngayBanHanh;
+    private LocalDate ngayBanHanh;
 
     @Column(name = "cap_co_quan")
     private String capCoQuan;
@@ -68,11 +67,10 @@ public class Document {
     private String linhVuc;
 
     @Column(name = "thoi_gian_xu_ly")
-    private Integer thoiGianXuLy;
+    private LocalDate thoiGianXuLy;
 
     @Column(name = "thoi_gian_tao")
-    private LocalDateTime thoiGianTao = LocalDateTime.now();
-
+    private LocalDate thoiGianTao = LocalDate.now();
 
 
 //    @Lob

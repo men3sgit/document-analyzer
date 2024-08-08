@@ -1,5 +1,6 @@
 package com.edu.nlu.document.model;
 
+import com.edu.nlu.document.enums.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,8 +9,10 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -29,13 +32,19 @@ public class User implements UserDetails {
 
     private String name;
 
-    private String roles = "ROLE_USER";
+    private String position;
+
+    private String role;
+
+    private Long departmentId;
+
+    public void setRole(Role role){
+        this.role = role.name();
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Arrays.stream(roles.split(", "))
-                .map(SimpleGrantedAuthority::new)
-                .toList();
+        return Collections.singletonList(new SimpleGrantedAuthority(role));
     }
 
     @Override
@@ -43,23 +52,5 @@ public class User implements UserDetails {
         return this.username;
     }
 
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
 
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
 }
