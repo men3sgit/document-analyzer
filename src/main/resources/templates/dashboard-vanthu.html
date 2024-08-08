@@ -7,7 +7,7 @@
     <link href="/images/logo_quochuy.png" rel="Shortcut Icon">
     <link href="/style/styles.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-</head>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <body>
 <header>
     <div class="logo">
@@ -91,11 +91,11 @@
         <ul style="padding-top: 12px;">
             <li th:each="vanban : ${vanbans}"
                 class="van-ban-item"
-                th:attr="data-so-van-ban=${vanban.id}, data-so-den=${vanban.soDen}, data-so-ky-hieu=${vanban.soKiHieuVanBan}, data-co-quan-ban-hanh=${vanban.coQuanBanHanh}, data-loai-van-ban=${vanban.loaiVanBan}, data-ngay-den=${vanban.ngayDen}, data-ngay-ban-hanh=${vanban.ngayBanHanh}, data-trich-yeu=${vanban.trichYeu}"
+                th:attr="id=${vanban.id},data-so-van-ban=${vanban.soVanBan}, data-so-den=${vanban.soDen}, data-so-ky-hieu=${vanban.soKiHieuVanBan}, data-co-quan-ban-hanh=${vanban.coQuanBanHanh}, data-loai-van-ban=${vanban.loaiVanBan}, data-ngay-den=${vanban.ngayDen}, data-ngay-ban-hanh=${vanban.ngayBanHanh}, data-trich-yeu=${vanban.trichYeu}"
             >
                 <div class="van-ban">
                     <p class="thoi-gian-tao" th:text="${vanban.ngayDen}"></p>
-                    <p class="so-van-ban" th:utext="'<strong>Số văn bản:</strong> ' + ${vanban.id}"></p>
+                    <p class="so-van-ban" th:utext="'<strong>Số văn bản:</strong> ' + ${vanban.soVanBan}"></p>
                     <p class="so-den" th:utext="'<strong>Số đến:</strong> ' + ${vanban.soDen}"></p>
                     <p class="ky-hieu" th:utext="'<strong>Số, ký hiệu của VB:</strong> ' + ${vanban.soKiHieuVanBan}"></p>
                     <p class="loai-van-ban" th:utext="'<strong>Loại văn bản:</strong> ' + ${vanban.loaiVanBan}"></p>
@@ -190,24 +190,39 @@
 </div>
 <script th:src="@{/js/script.js}"></script>
 <script>
+
     document.addEventListener('DOMContentLoaded', (event) => {
         const vanBanItems = document.querySelectorAll('.van-ban-item');
         vanBanItems.forEach(item => {
             item.addEventListener('click', function() {
-                const soVanBan = this.getAttribute('data-so-van-ban');
-                const soDen = this.getAttribute('data-so-den');
-                const soKyHieu = this.getAttribute('data-so-ky-hieu');
-                const coQuanBanHanh = this.getAttribute('data-co-quan-ban-hanh');
-                const loaiVanBan = this.getAttribute('data-loai-van-ban');
-                const ngayDen = this.getAttribute('data-ngay-den');
-                const ngayBanHanh = this.getAttribute('data-ngay-ban-hanh');
-                const trichYeu = this.getAttribute('data-trich-yeu');
-                showDetailsXuLy(soVanBan, soDen, soKyHieu, coQuanBanHanh, loaiVanBan, ngayDen, ngayBanHanh, trichYeu);
+                const documentId = this.getAttribute('id');
+
+                $.ajax({
+                    url: `/documents/${documentId}`,
+                    type: 'GET',
+                    success: function(data) {
+                        console.log(data)
+                        showDetailsXuLy(
+                            data.documentId,
+                            data.documentForm.arrivalNumber,
+                            data.documentForm.documentSymbol,
+                            data.documentForm.issuingAgency,
+                            data.documentForm.documentType,
+                            data.documentForm.arrivalDate,
+                            data.documentForm.issueDate,
+                            data.documentForm.summary,
+                            data.files
+                        );
+                    },
+                    error: function(error) {
+                        console.log('Error:', error);
+                    }
+                });
             });
         });
     });
 
-    function showDetailsXuLy(soVanBan, soDen, soKyHieu, coQuanBanHanh, loaiVanBan, ngayDen, ngayBanHanh, trichYeu) {
+    function showDetailsXuLy(soVanBan, soDen, soKyHieu, coQuanBanHanh, loaiVanBan, ngayDen, ngayBanHanh, trichYeu, files) {
         const mainContent = document.getElementById('main-content');
         mainContent.innerHTML = `
         <div>
@@ -236,6 +251,10 @@
                 <p><strong>Ngày đến:</strong> ${ngayDen}</p>
                 <p><strong>Ngày ban hành:</strong> ${ngayBanHanh}</p>
                 <p><strong>Trích yếu:</strong> ${trichYeu}</p>
+                <p><strong>Tep dinh kem:</strong></p>
+                <ul>
+                    ${files.map(file => `<li><a href="#">${file.name} (${formatCapacity(file.size)})</a></li>`).join('')}
+                </ul>
             </div>
         </div>
     `;
@@ -356,6 +375,12 @@
         });
     });
 
+    function formatCapacity(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(1024));
+        return parseFloat((bytes / Math.pow(1024, i)).toFixed(2)) + ' ' + sizes[i];
+    }
 </script>
 </body>
 </html>

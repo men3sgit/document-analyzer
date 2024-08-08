@@ -2,6 +2,7 @@ package com.edu.nlu.document.payload;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -11,14 +12,16 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Builder
 @ToString
 @Getter
 @Setter
 public class DocumentForm {
+
     @NotEmpty(message = "Số văn bản is required")
     private String documentNumber;
 
-    private boolean isLegalDocument;
+    private Boolean isLegalDocument;
 
     @NotEmpty(message = "Số đến is required")
     private String arrivalNumber;
@@ -46,11 +49,11 @@ public class DocumentForm {
 
     private String note;
 
-    private boolean isDirectiveDocument;
+    private Boolean isDirectiveDocument;
 
     private LocalDate processingTime;
 
-    private boolean hasPaperCopy;
+    private Boolean hasPaperCopy;
 
     private List<MultipartFile> attachedFiles;
 }

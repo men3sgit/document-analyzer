@@ -1,6 +1,8 @@
 package com.edu.nlu.document.enums;
 
 public enum Role {
-    ROLE_USER,
-    ROLE_ADMIN,
+    VAN_THU,
+    CHANH_VAN_PHONG,
+    BAN_GIAM_DOC,
+    CHUYEN_VIEN
 }
