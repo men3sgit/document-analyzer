@@ -112,7 +112,7 @@
 <div id="modal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
-            <p class="modal-title">Trình Chánh VP</p>
+            <p class="modal-title">Chuyển Phòng Ban</p>
             <span class="close"><i class="fa-solid fa-xmark"></i></span>
         </div>
         <div class="sub-option">
@@ -124,6 +124,7 @@
         </div>
         <form id="nextDocumentForm" method="post" th:action="@{/documents/chuyenbangiamdoc}" enctype="multipart/form-data" th:object="${documentForward}">
             <input type="hidden" id="documentId" name="documentId">
+            <input type="hidden" id="trichYeu" name="trichYeu">
             <div class="form-group">
                 <div class="left">
                     <label style="padding: 8px;">Nội dung xử lý</label>
@@ -145,20 +146,20 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each ="user: ${users}">
-                            <td>
-                                <input type="checkbox" class="rowCheckbox" name="receivedUsers" th:value="${user.id}" th:attr="user_name=${user.name}, user_position=${user.position}, user_id=${user.id}">
-                            </td>
-                            <td>
-                                <p th:utext="'<strong>'+${user.name}+'</strong>'+'  ('+${user.position}+')'"></p>
-                            </td>
-                        </tr>
+
                         </tbody>
                     </table>
                 </div>
             </div>
             <div class="form-group">
-                <div class="left">
+                <div class="left"><tr th:each ="user: ${users}">
+                    <td>
+                        <input type="checkbox" class="rowCheckbox" name="receivedUsers" th:value="${user.user.id}" th:attr="user_department= ${user.department},user_name=${user.user.name}, user_position=${user.user.position}, user_id=${user.user.id}">
+                    </td>
+                    <td>
+                        <p th:utext="'<strong>'+${user.department.name}+'</strong>'+'  ('+${user.department.naturalId}+')'+'<strong>'+${user.user.name}+'</strong>'+'  ('+${user.user.position}+')'"></p>
+                    </td>
+                </tr>
                     <label style="padding: 8px;">Người xử lý chính <span class="required">(*)</span></label>
                     <select id="selectOptions" required name="mainReceivedUser">
                         <option value="">Chọn một tùy chọn</option>
@@ -177,9 +178,13 @@
         vanBanItems.forEach(item => {
             item.addEventListener('click', function() {
                 const documentId = this.getAttribute('id');
+                const trichYeu = this.getAttribute('data-trich-yeu')
 
                 // Set the hidden input field with the document ID
                 document.getElementById('documentId').value = documentId;
+                document.getElementById('trichYeu').value = trichYeu;
+
+                console.log(trichYeu);
 
                 $.ajax({
                     url: `/documents/${documentId}`,
@@ -215,16 +220,13 @@
         <div class="sub-option">
             <ul class="child-option">
                 <li>
-                    <a id="trinhGiamDoc"><i class="fa-solid fa-share-from-square"></i> Trình Giám Đốc</a>
+                    <a id="chuyenPhongBan"><i class="fa-solid fa-share-from-square"></i> Chuyển phòng ban</a>
                 </li>
                 <li>
                     <a><i class="fa-solid fa-share-from-square"></i> Chuyển cùng cấp</a>
                 </li>
                 <li>
                     <a><i class="fa-solid fa-share-from-square"></i> Chuyển phòng ban</a>
-                </li>
-                <li>
-                    <a><i class="fa-solid fa-share-from-square"></i> Trả lại</a>
                 </li>
                 <li>
                     <a><i class="fa-solid fa-notes-medical"></i></i> Theo dõi công việc</a>
@@ -256,8 +258,30 @@
 
         // Gán sự kiện sau khi nội dung được cập nhật
 
-        document.getElementById('trinhGiamDoc').addEventListener('click', function (event) {
+        document.getElementById('chuyenPhongBan').addEventListener('click', function (event) {
             event.preventDefault();
+            const trichYeu = document.getElementById('trichYeu');
+            const data = {
+                text:  trichYeu.value
+            };
+
+            fetch('http://localhost:8000/predict/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+                .then(response => response.json())
+                .then(responseData => {
+                    const predictData = responseData.predict;
+                    console.log(predictData)
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+
+
             document.getElementById('modal').style.display = 'block';
         });
     }

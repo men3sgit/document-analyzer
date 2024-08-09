@@ -1,14 +1,17 @@
 package com.edu.nlu.document.service.impl;
 
 import com.edu.nlu.document.enums.Role;
+import com.edu.nlu.document.model.Department;
 import com.edu.nlu.document.model.User;
 import com.edu.nlu.document.repository.UserRepository;
 import com.edu.nlu.document.service.CommonService;
+import com.edu.nlu.document.service.DepartmentService;
 import com.edu.nlu.document.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -16,16 +19,28 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final CommonService commonService;
+    private final DepartmentService deparmentService;
 
 
     @Override
     public List<User> findAll() {
         Role role = commonService.getCurrentUserRole();
-        Role roleMustFind = switch (role){
+        if (role == Role.BAN_GIAM_DOC){
+            List<Department> departments = deparmentService.getAllDepartments();
+            List<User> users = new ArrayList<>();
+
+            for (Department department : departments) {
+                users.add(userRepository.getReferenceById(department.getHostId()));
+            }
+            return users;
+        }
+        Role roleMustFind = switch (role) {
             case VAN_THU -> Role.CHANH_VAN_PHONG;
             case CHANH_VAN_PHONG -> Role.BAN_GIAM_DOC;
-            case BAN_GIAM_DOC, CHUYEN_VIEN -> Role.CHUYEN_VIEN;
+            case CHUYEN_VIEN -> Role.CHUYEN_VIEN;
+            default -> throw new IllegalStateException("Unexpected role: " + role);
         };
+
         return userRepository.findAllByRole(roleMustFind.name());
     }
 

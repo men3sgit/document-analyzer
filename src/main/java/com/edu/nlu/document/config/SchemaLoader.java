@@ -2,9 +2,11 @@ package com.edu.nlu.document.config;
 
 import com.edu.nlu.document.enums.Role;
 import com.edu.nlu.document.enums.Status;
+import com.edu.nlu.document.model.Department;
 import com.edu.nlu.document.model.Document;
 import com.edu.nlu.document.model.Statement;
 import com.edu.nlu.document.model.User;
+import com.edu.nlu.document.repository.DepartmentRepository;
 import com.edu.nlu.document.repository.DocumentRepository;
 import com.edu.nlu.document.repository.StatementRepository;
 import com.edu.nlu.document.repository.UserRepository;
@@ -29,19 +31,346 @@ public class SchemaLoader {
     private final DocumentRepository documentRepository;
     private final PasswordEncoder passwordEncoder;
     private final StatementRepository statementRepository;
+    private final DepartmentRepository departmentRepository;
 
     @Bean
     CommandLineRunner initDatabase() {
         return args -> {
-//            createPermissionsAndRoles();
-            createUsers();
+//            createUsers();
             createDocuments();
             createStatements();
+            createUserAndDepartmentRepository();
         };
     }
 
+    private void createUserAndDepartmentRepository() {
+
+        // Department Thanh Tra Sở
+        Department department1 = Department.builder()
+                .id(1L)
+                .name("Thanh Tra Sở")
+                .naturalId("2733570")
+                .build();
+
+        departmentRepository.save(department1);
+
+        User user8 = User.builder()
+                .id(8L)
+                .username("nguyenhuuphuoc.snv")
+                .role(String.valueOf(Role.CHUYEN_VIEN))
+                .position("Trưởng phòng")
+                .name("Nguyễn Hữu Phước")
+                .password(passwordEncoder.encode("password"))
+                .departmentId(department1.getId())
+                .build();
+        department1.setHostId(user8.getId());
+
+        User user9 = User.builder()
+                .id(9L)
+                .username("nguyenvanbay.snv")
+                .role(String.valueOf(Role.CHUYEN_VIEN))
+                .position("Phó trưởng phòng")
+                .name("Nguyễn Văn Bảy")
+                .password(passwordEncoder.encode("password"))
+                .departmentId(department1.getId())
+                .build();
+
+        User user10 = User.builder()
+                .id(10L)
+                .username("nguyendaclong.snv")
+                .role(String.valueOf(Role.CHUYEN_VIEN))
+                .position("Nhân sự")
+                .name("Nguyễn Đắc Long")
+                .password(passwordEncoder.encode("password"))
+                .departmentId(department1.getId())
+                .build();
+
+        // Department Phòng Tổ Chức Biên Chế Và Tổ Chức Phi Chính Phủ
+        Department department2 = Department.builder()
+                .id(2L)
+                .name("Phòng Tổ Chức Biên Chế Và Tổ Chức Phi Chính Phủ")
+                .naturalId("2733552")
+                .build();
+
+        departmentRepository.save(department2);
+
+        User user11 = User.builder()
+                .id(11L)
+                .username("duongduymen.snv")
+                .role(String.valueOf(Role.CHUYEN_VIEN))
+                .position("Trưởng phòng")
+                .name("Dương Duy Mến")
+                .password(passwordEncoder.encode("password"))
+                .departmentId(department2.getId())
+                .build();
+        department2.setHostId(user11.getId());
+
+        User user12 = User.builder()
+                .id(12L)
+                .username("nguyenvanbe.snv")
+                .role(String.valueOf(Role.CHUYEN_VIEN))
+                .position("Phó trưởng phòng")
+                .name("Nguyễn Văn Be")
+                .password(passwordEncoder.encode("password"))
+                .departmentId(department2.getId())
+                .build();
+
+        User user13 = User.builder()
+                .id(13L)
+                .username("nguyendacsinh.snv")
+                .role(String.valueOf(Role.CHUYEN_VIEN))
+                .position("Nhân sự")
+                .name("Nguyễn Đắc Sinh")
+                .password(passwordEncoder.encode("password"))
+                .departmentId(department2.getId())
+                .build();
+
+        // Department Phòng Công Chức Viên Chức
+        Department department3 = Department.builder()
+                .id(3L)
+                .name("Phòng Công Chức Viên Chức")
+                .naturalId("2733546")
+                .build();
+
+        departmentRepository.save(department3);
+
+        User user14 = User.builder()
+                .id(14L)
+                .username("nguyenthia.snv")
+                .role(String.valueOf(Role.CHUYEN_VIEN))
+                .position("Trưởng phòng")
+                .name("Nguyễn Thị A")
+                .password(passwordEncoder.encode("password"))
+                .departmentId(department3.getId())
+                .build();
+        department3.setHostId(user14.getId());
+
+        User user15 = User.builder()
+                .id(15L)
+                .username("nguyenthib.snv")
+                .role(String.valueOf(Role.CHUYEN_VIEN))
+                .position("Phó trưởng phòng")
+                .name("Nguyễn Thị B")
+                .password(passwordEncoder.encode("password"))
+                .departmentId(department3.getId())
+                .build();
+
+        User user16 = User.builder()
+                .id(16L)
+                .username("nguyenthic.snv")
+                .role(String.valueOf(Role.CHUYEN_VIEN))
+                .position("Nhân sự")
+                .name("Nguyễn Thị C")
+                .password(passwordEncoder.encode("password"))
+                .departmentId(department3.getId())
+                .build();
+
+        // Department Ban Thi Đua Khen Thưởng
+        Department department4 = Department.builder()
+                .id(4L)
+                .name("Ban Thi Đua Khen Thưởng")
+                .naturalId("2733522")
+                .build();
+
+        departmentRepository.save(department4);
+
+        User user17 = User.builder()
+                .id(17L)
+                .username("tranthia.snv")
+                .role(String.valueOf(Role.CHUYEN_VIEN))
+                .position("Trưởng phòng")
+                .name("Trần Thị A")
+                .password(passwordEncoder.encode("password"))
+                .departmentId(department4.getId())
+                .build();
+        department4.setHostId(user17.getId());
+
+        User user18 = User.builder()
+                .id(18L)
+                .username("tranthib.snv")
+                .role(String.valueOf(Role.CHUYEN_VIEN))
+                .position("Phó trưởng phòng")
+                .name("Trần Thị B")
+                .password(passwordEncoder.encode("password"))
+                .departmentId(department4.getId())
+                .build();
+
+        User user19 = User.builder()
+                .id(19L)
+                .username("tranthic.snv")
+                .role(String.valueOf(Role.CHUYEN_VIEN))
+                .position("Nhân sự")
+                .name("Trần Thị C")
+                .password(passwordEncoder.encode("password"))
+                .departmentId(department4.getId())
+                .build();
+
+        // Department Chi Cục Văn Thư Lưu Trữ
+        Department department5 = Department.builder()
+                .id(5L)
+                .name("Chi Cục Văn Thư Lưu Trữ")
+                .naturalId("2733534")
+                .build();
+
+        departmentRepository.save(department5);
+
+        User user20 = User.builder()
+                .id(20L)
+                .username("lethia.snv")
+                .role(String.valueOf(Role.CHUYEN_VIEN))
+                .position("Trưởng phòng")
+                .name("Lê Thị A")
+                .password(passwordEncoder.encode("password"))
+                .departmentId(department5.getId())
+                .build();
+        department5.setHostId(user20.getId());
+
+        User user21 = User.builder()
+                .id(21L)
+                .username("lethib.snv")
+                .role(String.valueOf(Role.CHUYEN_VIEN))
+                .position("Phó trưởng phòng")
+                .name("Lê Thị B")
+                .password(passwordEncoder.encode("password"))
+                .departmentId(department5.getId())
+                .build();
+
+        User user22 = User.builder()
+                .id(22L)
+                .username("lethic.snv")
+                .role(String.valueOf(Role.CHUYEN_VIEN))
+                .position("Nhân sự")
+                .name("Lê Thị C")
+                .password(passwordEncoder.encode("password"))
+                .departmentId(department5.getId())
+                .build();
+
+        // Department Phòng Cải Cách Hành Chính
+        Department department6 = Department.builder()
+                .id(6L)
+                .name("Phòng Cải Cách Hành Chính")
+                .naturalId("2733540")
+                .build();
+
+        departmentRepository.save(department6);
+
+        User user23 = User.builder()
+                .id(23L)
+                .username("hoangthithao.snv")
+                .role(String.valueOf(Role.CHUYEN_VIEN))
+                .position("Trưởng phòng")
+                .name("Hoàng Thị Thảo")
+                .password(passwordEncoder.encode("password"))
+                .departmentId(department6.getId())
+                .build();
+        department6.setHostId(user23.getId());
+
+        User user24 = User.builder()
+                .id(24L)
+                .username("hoangthib.snv")
+                .role(String.valueOf(Role.CHUYEN_VIEN))
+                .position("Phó trưởng phòng")
+                .name("Hoàng Thị B")
+                .password(passwordEncoder.encode("password"))
+                .departmentId(department6.getId())
+                .build();
+
+        User user25 = User.builder()
+                .id(25L)
+                .username("hoangthic.snv")
+                .role(String.valueOf(Role.CHUYEN_VIEN))
+                .position("Nhân sự")
+                .name("Hoàng Thị C")
+                .password(passwordEncoder.encode("password"))
+                .departmentId(department6.getId())
+                .build();
+
+        // Department Quản lý
+        Department department7 = Department.builder()
+                .id(7L)
+                .name("Quản lý")
+                .naturalId("0000000")
+                .build();
+
+        departmentRepository.save(department7);
+
+        User user1 = User.builder()
+                .username("vanthu.snv")
+                .role(String.valueOf(Role.VAN_THU))
+                .position("Văn thư")
+                .password(passwordEncoder.encode("password"))
+                .name("Văn thư")
+                .departmentId(department7.getId())
+                .build();
+
+        User user2 = User.builder()
+                .username("chanhvanphong.snv")
+                .role(String.valueOf(Role.CHANH_VAN_PHONG))
+                .position("Chánh Văn Phòng")
+                .password(passwordEncoder.encode("password"))
+                .name("Chánh Văn Phòng")
+                .departmentId(department7.getId())
+                .build();
+
+        User user3 = User.builder()
+                .username("lemongtrang.svn")
+                .role(String.valueOf(Role.CHANH_VAN_PHONG))
+                .position("Chuyên viên")
+                .password(passwordEncoder.encode("password"))
+                .name("Lê Mộng Trang")
+                .departmentId(department7.getId())
+                .build();
+
+        User user4 = User.builder()
+                .username("huynhthanhnhan.snv")
+                .role(String.valueOf(Role.BAN_GIAM_DOC))
+                .position("Giám đốc")
+                .password(passwordEncoder.encode("password"))
+                .name("Huỳnh Thanh Nhân")
+                .departmentId(department7.getId())
+                .build();
+
+        User user5 = User.builder()
+                .username("nguyenbacnam.snv")
+                .role(String.valueOf(Role.BAN_GIAM_DOC))
+                .position("Phó Giám Đốc")
+                .password(passwordEncoder.encode("password"))
+                .name("Nguyễn Bắc Nam")
+                .departmentId(department7.getId())
+                .build();
+
+        User user6 = User.builder()
+                .username("phankieuthanhhuong.snv")
+                .role(String.valueOf(Role.BAN_GIAM_DOC))
+                .position("Phó Giám Đốc")
+                .password(passwordEncoder.encode("password"))
+                .name("Phan Kiều Thanh Hương")
+                .departmentId(department7.getId())
+                .build();
+
+        User user7 = User.builder()
+                .username("nguyenthihongtham.snv")
+                .role(String.valueOf(Role.BAN_GIAM_DOC))
+                .position("Phó Giám Đốc")
+                .password(passwordEncoder.encode("password"))
+                .name("Nguyễn Thị Hồng Thắm")
+                .departmentId(department7.getId())
+                .build();
+
+        // Lưu tất cả User
+        userRepository.saveAll(List.of(
+                user1, user2, user3, user4, user5, user6, user7, user8, user9, user10,
+                user11, user12, user13, user14, user15, user16, user17, user18, user19,
+                user20, user21, user22, user23, user24, user25
+        ));
+
+        // Lưu tất cả các thay đổi của Department
+        departmentRepository.saveAll(List.of(
+                department1, department2, department3, department4, department5, department6, department7
+        ));
+    }
+
     private void createDocuments() {
-        Random random = new Random();
         Document doc1 = Document.builder()
                 .id(1L)
                 .soVanBan("1002/SNV")

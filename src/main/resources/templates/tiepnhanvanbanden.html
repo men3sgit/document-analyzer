@@ -21,9 +21,9 @@
     <div class="user-info" onclick="toggleDropdown()">
         <img th:src="@{/images/avatar.png}" alt="Avatar">
         <div>
-            <span class="role">Văn Thư</span>
+            <span class="role" th:text="${session.user.position}"></span>
             <br>
-            <span class="name" th:text="${session.user.name}">Văn thư</span>
+            <span class="name" th:text="${session.user.name}"></span>
         </div>
         <div class="dropdown-menu">
             <form th:action="@{/auth/v1/logout}" method="post" id="logoutForm">
@@ -239,14 +239,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each ="user: ${users}">
-                            <td>
-                                <input type="checkbox" class="rowCheckbox" name="receivedUsers" th:value="${user.id}" th:attr="user_name=${user.name}, user_position=${user.position}, user_id=${user.id}">
-                            </td>
-                            <td>
-                                <p th:utext="'<strong>'+${user.name}+'</strong>'+'  ('+${user.position}+')'"></p>
-                            </td>
-                        </tr>
+
                         </tbody>
                     </table>
                 </div>
@@ -289,6 +282,34 @@
         function validateForm() {
             // Ngăn chặn gửi biểu mẫu nếu có lỗi
             if (form.checkValidity()) {
+                $.ajax({
+                    url: '/users/chanhvanphong',  // URL API
+                    type: 'GET',
+                    success: function(data) {
+                        // Đổ dữ liệu vào bảng trong modal
+                        const tbody = document.querySelector('.document-table tbody');
+                        tbody.innerHTML = '';  // Xóa các dòng cũ
+
+                        data.forEach(function(user) {
+                            const row = `
+                        <tr>
+                            <td>
+                                <input type="checkbox" class="rowCheckbox" name="receivedUsers" value="${user.user.id}" data-user_name="${user.user.name}" data-user_position="${user.user.position}" data-user_id="${user.user.id}">
+                            </td>
+                            <td>
+                                <p><strong>${user.user.name}</strong> (${user.user.position})</p>
+                            </td>
+                        </tr>`;
+                            tbody.insertAdjacentHTML('beforeend', row);
+                        });
+
+                        // Hiển thị modal sau khi dữ liệu đã được load
+                        document.getElementById('modal').style.display = 'block';
+                    },
+                    error: function(error) {
+                        console.log('Error:', error);
+                    }
+                });
                 document.getElementById('modal').style.display = 'block';
             }else {
                 event.preventDefault(); // Ngăn chặn gửi biểu mẫu
@@ -364,33 +385,37 @@
 
 
     document.addEventListener('DOMContentLoaded', function() {
-        var selectAllCheckbox = document.getElementById('selectAllCheckbox');
-        var rowCheckboxes = document.querySelectorAll('.rowCheckbox');
-        var tableRows = document.querySelectorAll('.document-table tbody tr');
-        var selectElement = document.getElementById('selectOptions');
+        const table = document.querySelector('.document-table');
+        const selectElement = document.getElementById('selectOptions');
 
-        // Khi checkbox "Chọn tất cả" thay đổi
-        selectAllCheckbox.addEventListener('change', function() {
-            var isChecked = selectAllCheckbox.checked;
-            rowCheckboxes.forEach(function(checkbox) {
-                checkbox.checked = isChecked;
-                toggleHighlight(checkbox);
-            });
-            updateSelectOptions();
-        });
-
-        // Khi checkbox trong bảng thay đổi
-        rowCheckboxes.forEach(function(checkbox) {
-            checkbox.addEventListener('change', function() {
+        // Delegation for row checkboxes
+        table.addEventListener('change', function(event) {
+            if (event.target.classList.contains('rowCheckbox')) {
+                const checkbox = event.target;
                 toggleHighlight(checkbox);
                 updateSelectAllCheckbox();
                 updateSelectOptions();
-            });
+            }
+        });
+
+        // Delegation for "Chọn tất cả" checkbox
+        table.addEventListener('change', function(event) {
+            if (event.target.id === 'selectAllCheckbox') {
+                const isChecked = event.target.checked;
+                const rowCheckboxes = table.querySelectorAll('.rowCheckbox');
+                rowCheckboxes.forEach(function(checkbox) {
+                    checkbox.checked = isChecked;
+                    toggleHighlight(checkbox);
+                });
+                updateSelectOptions();
+            }
         });
 
         // Cập nhật trạng thái của checkbox "Chọn tất cả"
         function updateSelectAllCheckbox() {
-            var allChecked = Array.from(rowCheckboxes).every(function(checkbox) {
+            const rowCheckboxes = table.querySelectorAll('.rowCheckbox');
+            const selectAllCheckbox = document.getElementById('selectAllCheckbox');
+            const allChecked = Array.from(rowCheckboxes).every(function(checkbox) {
                 return checkbox.checked;
             });
             selectAllCheckbox.checked = allChecked;
@@ -398,7 +423,7 @@
 
         // Thay đổi màu nền của hàng dựa trên trạng thái checkbox
         function toggleHighlight(checkbox) {
-            var row = checkbox.closest('tr');
+            const row = checkbox.closest('tr');
             if (checkbox.checked) {
                 row.classList.add('highlight');
             } else {
@@ -407,12 +432,14 @@
         }
 
         function updateSelectOptions() {
-            var selectedUsers = new Set(); // Dùng Set để loại bỏ giá trị trùng lặp
+            const rowCheckboxes = document.querySelectorAll('.rowCheckbox');
+            const selectedUsers = new Set(); // Dùng Set để loại bỏ giá trị trùng lặp
+
             rowCheckboxes.forEach(function(checkbox) {
                 if (checkbox.checked) {
-                    var userId = checkbox.getAttribute('user_id');
-                    var userName = checkbox.getAttribute('user_name');
-                    var userPosition = checkbox.getAttribute('user_position');
+                    const userId = checkbox.dataset.user_id;
+                    const userName = checkbox.dataset.user_name;
+                    const userPosition = checkbox.dataset.user_position;
                     if (userId) {
                         selectedUsers.add({ id: userId, name: userName, position: userPosition });
                     }
@@ -424,7 +451,7 @@
 
             // Thêm các tùy chọn mới vào thẻ select
             selectedUsers.forEach(function(user) {
-                var option = document.createElement('option');
+                const option = document.createElement('option');
                 option.value = user.id;
                 option.textContent = `${user.name} (${user.position})`;
                 selectElement.appendChild(option);
