@@ -1,13 +1,9 @@
 package com.edu.nlu.document.controller;
 
 import com.edu.nlu.document.enums.Role;
-import com.edu.nlu.document.model.Document;
-import com.edu.nlu.document.model.Statement;
-import com.edu.nlu.document.model.StatementDocumentWrapper;
-import com.edu.nlu.document.service.DocumentService;
-import com.edu.nlu.document.service.StatementService;
-import com.edu.nlu.document.service.UserService;
-import com.edu.nlu.document.service.CommonService;
+import com.edu.nlu.document.model.*;
+import com.edu.nlu.document.payload.UserDetails;
+import com.edu.nlu.document.service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +23,7 @@ public class DashboardController {
     private final UserService userService;
     private final StatementService statementService;
     private final CommonService commonService;
+    private final DepartmentService deparmentService;
 
 
     @GetMapping(path = {"/dashboard", "", "/"})
@@ -39,8 +36,7 @@ public class DashboardController {
             wrappedList.add(new StatementDocumentWrapper(documents.get(i), statements.get(i)));
         }
         model.addAttribute("vanbans", wrappedList);
-        model.addAttribute("user", userService.findById(commonService.getCurrentUserId()));
-        model.addAttribute("users", userService.findAll());
+
         String role = commonService.getCurrentUserRole().name();
         return getDashboardByRole(role);
     }
@@ -48,7 +44,6 @@ public class DashboardController {
 
     @GetMapping(path = "/xulyvanban")
     public String showXuLyVanBan(Model model) {
-        model.addAttribute("users", userService.findAll());
         return "tiepnhanvanbanden";
     }
 

@@ -2,18 +2,12 @@ package com.edu.nlu.document.controller;
 
 import com.edu.nlu.document.enums.Status;
 import com.edu.nlu.document.mapper.DocumentMapper;
-import com.edu.nlu.document.model.Document;
-import com.edu.nlu.document.model.File;
-import com.edu.nlu.document.model.Statement;
-import com.edu.nlu.document.model.User;
+import com.edu.nlu.document.model.*;
 import com.edu.nlu.document.payload.DocumentDetails;
 import com.edu.nlu.document.payload.DocumentForm;
 import com.edu.nlu.document.payload.DocumentForward;
-import com.edu.nlu.document.service.DocumentService;
-import com.edu.nlu.document.service.FileService;
-import com.edu.nlu.document.service.StatementService;
-import com.edu.nlu.document.service.UserService;
-import com.edu.nlu.document.service.CommonService;
+import com.edu.nlu.document.payload.UserDetails;
+import com.edu.nlu.document.service.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -36,6 +31,7 @@ public class DocumentController {
     private final FileService fileService;
     private final StatementService statementService;
     private final CommonService commonService;
+    private final DepartmentService deparmentService;
 
     @GetMapping
     public String showUserList(Model model) {
@@ -69,7 +65,20 @@ public class DocumentController {
                 .map(MultipartFile::getOriginalFilename)
                 .forEach(log::info);
         documentService.addNewDocument(documentForm);
-        model.addAttribute("users", userService.findAll());
+        List<User> users = userService.findAll();
+        List<UserDetails> usersDetails = new ArrayList<>();
+        for (User user : users) {
+            UserDetails userDetails = new UserDetails();
+            Department department = deparmentService.getDepartmentById(user.getDepartmentId());
+            userDetails.setDepartment(department);
+            userDetails.setUser(user);
+            usersDetails.add(userDetails);
+        }
+
+
+        model.addAttribute("users", usersDetails);
+
+
         return "tiepnhanvanbanden";
     }
 
